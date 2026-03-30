@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zurück in die Zukunft - Berni wird 53!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;600;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #000;
+            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: #fff;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            overscroll-behavior: none;
+        }
+
+        /* STARFIELD */
+        .starfield { position: fixed; inset: 0; z-index: 0; }
+        .star {
+            position: absolute; background: #fff; border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite alternate;
+        }
+        @keyframes twinkle { 0%{opacity:.2} 100%{opacity:1} }
+
+        /* ROAD */
+        .road {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 40vh;
+            background: linear-gradient(to bottom, transparent 0%, #111 20%, #1a1a1a 100%);
+            perspective: 600px; z-index: 1; overflow: hidden;
+        }
+        .road-lines {
+            position: absolute; bottom: 0; left: 50%; width: 6px; height: 100%;
+            transform-origin: bottom center; transform: translateX(-50%) rotateX(60deg);
+        }
+        .road-dash {
+            width: 6px; height: 30px; background: #ffd700; margin-bottom: 25px;
+            border-radius: 2px; animation: roadScroll 1.5s linear infinite; opacity: 0.7;
+        }
+        @keyframes roadScroll { 0%{transform:translateY(-55px)} 100%{transform:translateY(0)} }
+
+        /* FIRE TRAILS */
+        .fire-trails {
+            position: fixed; bottom: 18vh; left: 0; width: 100%; height: 20px;
+            z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.5s;
+        }
+        .fire-trails.active { opacity: 1; }
+        .fire-trail {
+            position: absolute; height: 4px;
+            background: linear-gradient(to left, #00bfff, #00e5ff, transparent);
+            border-radius: 2px; filter: blur(1px);
+            box-shadow: 0 0 15px #00bfff, 0 0 30px #00bfff;
+            animation: trailGrow 0.6s ease-out forwards;
+        }
+        .fire-trail.left { top: 2px; }
+        .fire-trail.right { top: 12px; }
+        @keyframes trailGrow { 0%{width:0;right:50%} 100%{width:80%;right:-10%} }
+
+        /* START SCREEN */
+        .start-screen {
+            position: fixed; inset: 0; z-index: 200;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(ellipse at center, #0a0a2e 0%, #000 70%);
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+        }
+        .start-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .bttf-logo {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 5vw, 3rem);
+            font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255,165,0,0.5));
+            text-align: center; line-height: 1.3; margin-bottom: 15px;
+        }
+        .bttf-sub {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            color: #00bfff; letter-spacing: 6px;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; margin-bottom: 40px;
+        }
+        .speed-display {
+            font-family: 'Orbitron', sans-serif; font-size: 1rem; color: #ff4500;
+            margin-bottom: 30px; opacity: 0; transition: opacity 0.3s;
+        }
+        .speed-display.visible { opacity: 1; }
+        .speed-display span { font-size: 2rem; color: #ffd700; text-shadow: 0 0 15px #ffd700; }
+        .start-btn {
+            padding: 18px 55px; font-size: 1.3rem; font-family: 'Orbitron', sans-serif;
+            font-weight: 700; background: transparent; border: 2px solid #00bfff;
+            color: #00bfff; cursor: pointer; text-transform: uppercase; letter-spacing: 3px;
+            position: relative; overflow: hidden; transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(0,191,255,0.3), inset 0 0 15px rgba(0,191,255,0.1);
+            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+        }
+        .start-btn:hover {
+            background: rgba(0,191,255,0.15);
+            box-shadow: 0 0 30px rgba(0,191,255,0.5), inset 0 0 30px rgba(0,191,255,0.2);
+            transform: scale(1.05);
+        }
+        .start-btn::before {
+            content: ''; position: absolute; top: -2px; left: -100%;
+            width: 100%; height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(0,191,255,0.4), transparent);
+            animation: btnSweep 2.5s linear infinite;
+        }
+        @keyframes btnSweep { 0%{left:-100%} 100%{left:100%} }
+
+        /* DELOREAN */
+        .delorean-container {
+            position: fixed; z-index: 100; pointer-events: none;
+            width: 520px; height: 240px; right: -580px; top: 50%;
+            transform: translateY(-50%); transition: none;
+            filter: drop-shadow(0 0 25px rgba(0,191,255,0.6));
+        }
+        .delorean-container.fly-in {
+            animation: deloreanFlyIn 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .delorean-container.parked {
+            right: auto; left: 50%; top: 8%;
+            transform: translate(-50%, 0) scale(0.55);
+        }
+        .delorean-container.fly-away {
+            animation: deloreanFlyAway 1.8s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+        }
+        @keyframes deloreanFlyIn {
+            0% { right: -580px; transform: translateY(-50%) rotate(-3deg); }
+            60% { right: 25%; transform: translateY(-50%) rotate(1deg); }
+            100% { right: 35%; transform: translateY(-50%) rotate(0deg); }
+        }
+        @keyframes deloreanFlyAway {
+            0% { transform: translate(-50%, 0) scale(0.55); opacity: 1; filter: drop-shadow(0 0 25px rgba(0,191,255,0.6)); }
+            40% { transform: translate(-50%, 0) scale(0.6); }
+            100% { transform: translate(-50%, -250%) scale(0.15); opacity: 0; filter: drop-shadow(0 0 80px rgba(0,191,255,1)); }
+        }
+        .delorean-glow {
+            position: absolute; inset: -30px;
+            background: radial-gradient(ellipse, rgba(0,191,255,0.12) 0%, transparent 70%);
+            animation: glowPulse 2s ease-in-out infinite alternate;
+        }
+        @keyframes glowPulse { 0%{opacity:0.5} 100%{opacity:1} }
+
+        /* FLUX CAPACITOR FULLSCREEN OVERLAY */
+        .flux-overlay {
+            position: fixed; inset: 0; z-index: 250;
+            background: rgba(0,0,0,0.92);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .flux-overlay.active { opacity: 1; visibility: visible; }
+        .flux-overlay .flux-box {
+            position: relative; width: 320px; height: 320px;
+        }
+        .flux-overlay .flux-housing {
+            position: absolute; inset: 0;
+            border: 3px solid #555; border-radius: 12px;
+            background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,191,255,0.2);
+        }
+        .flux-overlay .flux-label {
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; font-size: 0.5rem; letter-spacing: 3px;
+            color: #666; text-transform: uppercase;
+        }
+        .flux-overlay .flux-y {
+            position: absolute; width: 100%; height: 100%;
+        }
+        .flux-overlay .flux-arm-big {
+            position: absolute; left: 50%; top: 50%;
+            width: 6px; height: 110px; margin-left: -3px;
+            transform-origin: top center;
+            background: linear-gradient(to bottom, #ffd700, #ff8c00);
+            border-radius: 3px;
+            box-shadow: 0 0 15px #ffd700, 0 0 30px #ff8c00;
+            opacity: 0.4;
+        }
+        .flux-overlay .flux-arm-big:nth-child(1) { transform: rotate(0deg); }
+        .flux-overlay .flux-arm-big:nth-child(2) { transform: rotate(120deg); }
+        .flux-overlay .flux-arm-big:nth-child(3) { transform: rotate(240deg); }
+        .flux-overlay.active .flux-arm-big {
+            animation: fluxArmPulse 0.15s ease-in-out infinite alternate;
+        }
+        .flux-overlay .flux-arm-big:nth-child(2) { animation-delay: 0.05s; }
+        .flux-overlay .flux-arm-big:nth-child(3) { animation-delay: 0.1s; }
+        @keyframes fluxArmPulse {
+            0% { opacity: 0.3; box-shadow: 0 0 8px #ffd700; background: linear-gradient(to bottom, #aa7700, #885500); }
+            100% { opacity: 1; box-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00, 0 0 90px rgba(255,140,0,0.3); background: linear-gradient(to bottom, #ffd700, #ff8c00); }
+        }
+        .flux-overlay .flux-center-orb {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px; height: 30px; border-radius: 50%;
+            background: #ffd700;
+            box-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00, 0 0 60px rgba(255,215,0,0.5);
+        }
+        .flux-overlay.active .flux-center-orb {
+            animation: orbPulse 0.2s ease-in-out infinite alternate;
+        }
+        @keyframes orbPulse {
+            0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #ff8c00; transform: translate(-50%,-50%) scale(0.9); }
+            100% { box-shadow: 0 0 40px #ffd700, 0 0 80px #ff8c00, 0 0 120px rgba(255,215,0,0.4); transform: translate(-50%,-50%) scale(1.15); }
+        }
+        .flux-overlay .flux-ring {
+            position: absolute; top: 50%; left: 50%;
+            width: 200px; height: 200px; margin: -100px 0 0 -100px;
+            border: 2px solid rgba(255,215,0,0.2); border-radius: 50%;
+        }
+        .flux-overlay.active .flux-ring {
+            animation: ringPulse 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes ringPulse {
+            0% { border-color: rgba(255,215,0,0.1); transform: scale(0.95); }
+            100% { border-color: rgba(255,215,0,0.5); transform: scale(1.05); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+        }
+        .flux-overlay .flux-speed {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900;
+            color: #ff4444; text-shadow: 0 0 10px #ff4444;
+            letter-spacing: 4px;
+        }
+        .flux-overlay .flux-caption {
+            position: absolute; bottom: 55px; left: 50%; transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; font-size: 0.5rem;
+            color: #00bfff; letter-spacing: 4px; text-transform: uppercase;
+            text-shadow: 0 0 8px #00bfff;
+        }
+        .flux-overlay .flux-wires {
+            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+        }
+        .flux-overlay .wire {
+            position: absolute; width: 2px; background: #333;
+            border-radius: 1px;
+        }
+
+        /* TIME DISPLAY */
+        .time-circuits {
+            position: fixed; top: 15px; left: 50%; transform: translateX(-50%);
+            z-index: 80; display: none; flex-direction: column; gap: 6px;
+            background: rgba(0,0,0,0.85); border: 1px solid #333; border-radius: 8px;
+            padding: 12px 20px; font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        .time-row { display: flex; align-items: center; gap: 10px; font-size: 0.65rem; letter-spacing: 1px; }
+        .time-label { width: 90px; text-align: right; text-transform: uppercase; }
+        .time-label.red { color: #ff4444; }
+        .time-label.green { color: #44ff44; }
+        .time-label.yellow { color: #ffaa00; }
+        .time-value {
+            font-size: 0.9rem; padding: 3px 8px; background: #111;
+            border: 1px solid #333; border-radius: 3px; letter-spacing: 2px;
+            min-width: 180px; text-align: center;
+        }
+        .time-value.red { color: #ff4444; text-shadow: 0 0 8px #ff4444; }
+        .time-value.green { color: #44ff44; text-shadow: 0 0 8px #44ff44; }
+        .time-value.yellow { color: #ffaa00; text-shadow: 0 0 8px #ffaa00; }
+
+        /* MAIN CONTENT */
+        .content {
+            position: relative; z-index: 10; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; padding: 140px 20px 60px; text-align: center;
+        }
+        .greeting {
+            opacity: 0; transform: translateX(300px) scale(0.5);
+            transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .greeting.visible { opacity: 1; transform: translateX(0) scale(1); }
+        .greeting .subtitle {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(0.7rem, 2vw, 1rem);
+            color: #00bfff; letter-spacing: 8px; text-transform: uppercase;
+            text-shadow: 0 0 10px #00bfff; margin-bottom: 10px;
+        }
+        .greeting h1 {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(180deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255,165,0,0.6));
+            line-height: 1.1; text-transform: uppercase;
+        }
+        .greeting .name {
+            font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 10vw, 6rem);
+            font-weight: 900; display: block;
+            background: linear-gradient(180deg, #00e5ff, #00bfff, #0088cc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0,191,255,0.6)); margin: 5px 0 20px;
+        }
+
+        /* SPEEDOMETER */
+        .speedometer {
+            position: relative; width: 200px; height: 200px; margin: 20px auto;
+            opacity: 0; transform: scale(0);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .speedometer.visible { opacity: 1; transform: scale(1); }
+        .speedo-ring {
+            position: absolute; inset: 0; border: 3px solid #333; border-radius: 50%;
+            background: radial-gradient(circle, #111 60%, #000 100%);
+        }
+        .speedo-ring::before {
+            content: ''; position: absolute; inset: -5px; border-radius: 50%;
+            border: 2px solid transparent; border-top-color: #00bfff; border-right-color: #ffd700;
+            animation: speedoSpin 3s linear infinite;
+        }
+        @keyframes speedoSpin { to { transform: rotate(360deg); } }
+        .speedo-value {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900;
+            color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00;
+        }
+        .speedo-label {
+            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; font-size: 0.55rem;
+            color: #00bfff; letter-spacing: 3px; text-transform: uppercase; white-space: nowrap;
+        }
+        .speedo-mph {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
+            color: #ff4500; letter-spacing: 2px;
+        }
+
+        /* MESSAGE */
+        .message {
+            max-width: 600px; margin: 30px auto; padding: 30px;
+            background: rgba(0,191,255,0.03); backdrop-filter: blur(10px);
+            border-radius: 12px; border: 1px solid rgba(0,191,255,0.2);
+            box-shadow: 0 0 30px rgba(0,191,255,0.1), inset 0 0 30px rgba(0,0,0,0.3);
+            opacity: 0; transform: translateY(30px); transition: all 1s ease;
+        }
+        .message.visible { opacity: 1; transform: translateY(0); }
+        .message p { color: #ccc; font-size: 1.1rem; line-height: 1.9; font-weight: 300; }
+        .message .highlight { color: #ffd700; font-weight: 600; }
+        .message .blue { color: #00bfff; font-weight: 600; }
+
+        /* BUTTONS */
+        .actions {
+            display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;
+            margin: 30px 0; opacity: 0; transition: opacity 1s ease;
+        }
+        .actions.visible { opacity: 1; }
+        .action-btn {
+            padding: 12px 28px; font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+            background: transparent; border: 1px solid; cursor: pointer;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+            user-select: none; -webkit-user-select: none;
+        }
+        .action-btn:active { transform: scale(0.95) !important; }
+        .action-btn.blue-btn { color: #00bfff; border-color: #00bfff; box-shadow: 0 0 10px rgba(0,191,255,0.2); }
+        .action-btn.blue-btn:hover { background: rgba(0,191,255,0.15); box-shadow: 0 0 25px rgba(0,191,255,0.4); transform: translateY(-2px); }
+        .action-btn.gold-btn { color: #ffd700; border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.2); }
+        .action-btn.gold-btn:hover { background: rgba(255,215,0,0.15); box-shadow: 0 0 25px rgba(255,215,0,0.4); transform: translateY(-2px); }
+        .action-btn.red-btn { color: #ff4500; border-color: #ff4500; box-shadow: 0 0 10px rgba(255,69,0,0.2); }
+        .action-btn.red-btn:hover { background: rgba(255,69,0,0.15); box-shadow: 0 0 25px rgba(255,69,0,0.4); transform: translateY(-2px); }
+
+        /* CONFETTI CANVAS */
+        #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 150; }
+
+        /* TIME FLASH */
+        .time-flash {
+            position: fixed; inset: 0; z-index: 300;
+            pointer-events: none; opacity: 0;
+        }
+        .time-flash.blue {
+            background: radial-gradient(circle, rgba(0,191,255,0.9) 0%, rgba(0,100,200,0.6) 40%, transparent 70%);
+            animation: flashBlue 0.4s ease-out forwards;
+        }
+        .time-flash.white {
+            background: #fff; opacity: 1;
+            animation: flashWhite 0.3s ease-out forwards;
+        }
+        @keyframes flashBlue { 0%{opacity:1} 100%{opacity:0} }
+        @keyframes flashWhite { 0%{opacity:1} 50%{opacity:0.6} 100%{opacity:0} }
+
+        /* LIGHTNING */
+        .lightning {
+            position: fixed; top: 0; left: 0; width: 100%; height: 50%;
+            z-index: 95; pointer-events: none; opacity: 0;
+        }
+        .lightning.flash { animation: lightningFlash 0.3s ease; }
+        @keyframes lightningFlash {
+            0%{opacity:0} 8%{opacity:1} 15%{opacity:0.2} 25%{opacity:0.9}
+            40%{opacity:0.1} 50%{opacity:0.7} 70%{opacity:0} 100%{opacity:0}
+        }
+
+        /* MUSIC CONTROL */
+        .music-control {
+            position: fixed; bottom: 20px; left: 20px; z-index: 160;
+            background: rgba(0,0,0,0.7); border: 1px solid #00bfff;
+            border-radius: 50%; width: 54px; height: 54px;
+            display: none; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.3rem; transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0,191,255,0.3);
+            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+        }
+        .music-control:hover { box-shadow: 0 0 25px rgba(0,191,255,0.5); transform: scale(1.1); }
+        .music-control.playing {
+            border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            animation: musicPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes musicPulse { 0%,100%{box-shadow:0 0 10px rgba(255,215,0,0.3)} 50%{box-shadow:0 0 25px rgba(255,215,0,0.6)} }
+
+        /* BALLOONS */
+        .balloon { position: fixed; bottom: -180px; z-index: 5; pointer-events: none; animation: balloonFloat linear forwards; }
+        .balloon-body {
+            width: var(--size); height: calc(var(--size) * 1.25);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            background: radial-gradient(circle at 30% 30%, var(--color-light), var(--color));
+            position: relative; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+        }
+        .balloon-body::after {
+            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            border-left: 5px solid transparent; border-right: 5px solid transparent;
+            border-top: 9px solid var(--color);
+        }
+        .balloon-string { width: 1px; height: 70px; background: rgba(255,255,255,0.3); margin: 0 auto; }
+        @keyframes balloonFloat {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+            100% { transform: translateY(-120vh) rotate(var(--rot)); opacity: 0; }
+        }
+
+        /* SWIPE HINT */
+        .swipe-hint {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            z-index: 170; font-family: 'Orbitron', sans-serif; font-size: 0.55rem;
+            color: rgba(0,191,255,0.6); letter-spacing: 2px; text-transform: uppercase;
+            text-align: center; pointer-events: none; opacity: 0; transition: opacity 1s ease; display: none;
+        }
+        .swipe-hint.visible { opacity: 1; }
+        .swipe-hint .arrow { display: block; font-size: 1.2rem; animation: swipeAnim 2s ease-in-out infinite; margin-bottom: 5px; }
+        @keyframes swipeAnim { 0%,100%{transform:translateX(-10px);opacity:0.4} 50%{transform:translateX(10px);opacity:1} }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+            .delorean-container { width: 340px; height: 170px; }
+            .time-circuits { transform: translateX(-50%) scale(0.75); top: 5px; }
+            .actions { gap: 8px; }
+            .action-btn { padding: 14px 20px; font-size: 0.65rem; min-height: 48px; }
+            .start-btn { padding: 20px 50px; font-size: 1.2rem; }
+            .swipe-hint { display: block; }
+            .flux-overlay .flux-box { width: 250px; height: 250px; }
+            .flux-overlay .flux-arm-big { height: 85px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Time Flash -->
+<div class="time-flash" id="timeFlash"></div>
+
+<!-- Lightning -->
+<div class="lightning" id="lightning">
+    <svg width="100%" height="100%" viewBox="0 0 800 400" preserveAspectRatio="none">
+        <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#00bfff" stroke-width="4" opacity="0.9" filter="url(#glow)"/>
+        <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
+        <path d="M420,0 L440,100 L410,100 L460,220 L420,220 L490,400" fill="none" stroke="#00bfff" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
+        <defs><filter id="glow"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    </svg>
+</div>
+
+<!-- Starfield -->
+<div class="starfield" id="starfield"></div>
+
+<!-- Road -->
+<div class="road"><div class="road-lines">
+    <div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div>
+    <div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div>
+</div></div>
+
+<!-- Fire Trails -->
+<div class="fire-trails" id="fireTrails"><div class="fire-trail left"></div><div class="fire-trail right"></div></div>
+
+<!-- DeLorean (detailed) -->
+<div class="delorean-container" id="delorean">
+    <div class="delorean-glow"></div>
+    <svg viewBox="0 0 520 240" width="100%" height="100%">
+        <defs>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#c8c8c8"/>
+                <stop offset="30%" stop-color="#b0b0b0"/>
+                <stop offset="60%" stop-color="#909090"/>
+                <stop offset="100%" stop-color="#707070"/>
+            </linearGradient>
+            <linearGradient id="bodyGrad2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#a0a0a0"/>
+                <stop offset="100%" stop-color="#686868"/>
+            </linearGradient>
+            <linearGradient id="windshieldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgba(0,200,255,0.3)"/>
+                <stop offset="50%" stop-color="rgba(0,150,230,0.12)"/>
+                <stop offset="100%" stop-color="rgba(0,80,180,0.06)"/>
+            </linearGradient>
+            <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#aaa"/>
+                <stop offset="100%" stop-color="#888"/>
+            </linearGradient>
+            <linearGradient id="chromeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ddd"/>
+                <stop offset="40%" stop-color="#bbb"/>
+                <stop offset="100%" stop-color="#999"/>
+            </linearGradient>
+            <linearGradient id="headlightGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#fff8c0"/>
+                <stop offset="100%" stop-color="#ffd700"/>
+            </linearGradient>
+            <linearGradient id="tireGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2a2a2a"/>
+                <stop offset="50%" stop-color="#1a1a1a"/>
+                <stop offset="100%" stop-color="#111"/>
+            </linearGradient>
+            <radialGradient id="hubGrad" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#888"/>
+                <stop offset="60%" stop-color="#555"/>
+                <stop offset="100%" stop-color="#333"/>
+            </radialGradient>
+            <filter id="carGlow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="softGlow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="tinyGlow"><feGaussianBlur stdDeviation="1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+
+        <!-- Ground shadow -->
+        <ellipse cx="250" cy="172" rx="190" ry="10" fill="rgba(0,0,0,0.35)"/>
+
+        <!-- ===== MAIN BODY ===== -->
+        <!-- Lower body / rocker panel -->
+        <path d="M55,150 L68,128 L85,122 L130,118 L200,114 L360,114 L410,120 L430,132 L435,150 Z" fill="url(#bodyGrad2)" stroke="#888" stroke-width="0.6"/>
+        <!-- Main body shell -->
+        <path d="M48,148 L62,105 L88,88 L140,74 L190,66 L280,66 L340,74 L380,88 L405,108 L428,128 L435,148 Z" fill="url(#bodyGrad)" stroke="#aaa" stroke-width="0.8"/>
+        <!-- Upper body highlight -->
+        <path d="M65,105 L90,88 L140,76 L190,68 L280,68 L340,76 L378,88 L400,105" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+
+        <!-- ===== FRONT DETAILS ===== -->
+        <!-- Front bumper assembly -->
+        <path d="M42,148 L48,135 L55,130 L62,128 L58,148 Z" fill="#777" stroke="#888" stroke-width="0.5"/>
+        <path d="M44,148 L46,142 L55,138 L52,148 Z" fill="url(#chromeGrad)" stroke="#aaa" stroke-width="0.3"/>
+        <!-- Front valance / air dam -->
+        <path d="M55,148 L60,138 L85,132 L120,128 L115,148 Z" fill="#666" stroke="#777" stroke-width="0.4"/>
+        <!-- Front grille slats -->
+        <line x1="62" y1="138" x2="90" y2="132" stroke="#555" stroke-width="0.5"/>
+        <line x1="63" y1="141" x2="92" y2="134" stroke="#555" stroke-width="0.5"/>
+        <line x1="64" y1="144" x2="95" y2="136" stroke="#555" stroke-width="0.5"/>
+        <!-- Front indicator lights -->
+        <rect x="50" y="128" width="6" height="3" rx="1" fill="#ffaa00" opacity="0.7"/>
+        <!-- Headlight housing -->
+        <rect x="52" y="116" width="22" height="10" rx="2" fill="#222" stroke="#555" stroke-width="0.5"/>
+        <!-- Headlight lens -->
+        <rect x="54" y="117" width="18" height="8" rx="1.5" fill="url(#headlightGrad)" opacity="0.95" filter="url(#carGlow)"/>
+        <!-- Headlight beam glow -->
+        <ellipse cx="50" cy="121" rx="12" ry="6" fill="rgba(255,215,0,0.15)" filter="url(#softGlow)"/>
+        <!-- Headlight ridges -->
+        <line x1="58" y1="117" x2="58" y2="125" stroke="rgba(255,255,255,0.2)" stroke-width="0.3"/>
+        <line x1="63" y1="117" x2="63" y2="125" stroke="rgba(255,255,255,0.2)" stroke-width="0.3"/>
+        <line x1="68" y1="117" x2="68" y2="125" stroke="rgba(255,255,255,0.2)" stroke-width="0.3"/>
+
+        <!-- ===== BODY PANELS ===== -->
+        <!-- Belt line (chrome trim) -->
+        <line x1="68" y1="105" x2="410" y2="105" stroke="url(#chromeGrad)" stroke-width="1" opacity="0.7"/>
+        <!-- Lower body crease -->
+        <line x1="75" y1="118" x2="420" y2="118" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+        <!-- Front fender crease -->
+        <path d="M70,95 Q90,92 120,95" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+        <!-- Door panel lines -->
+        <line x1="195" y1="74" x2="190" y2="148" stroke="#888" stroke-width="0.6" opacity="0.5"/>
+        <line x1="290" y1="70" x2="285" y2="148" stroke="#888" stroke-width="0.6" opacity="0.5"/>
+        <!-- Door handle -->
+        <rect x="230" y="92" width="12" height="3" rx="1.5" fill="url(#chromeGrad)" stroke="#bbb" stroke-width="0.3"/>
+        <!-- Door handle shadow -->
+        <rect x="230" y="95" width="12" height="1" rx="0.5" fill="rgba(0,0,0,0.15)"/>
+        <!-- Second door handle -->
+        <rect x="310" y="92" width="12" height="3" rx="1.5" fill="url(#chromeGrad)" stroke="#bbb" stroke-width="0.3"/>
+
+        <!-- ===== WINDSHIELD ===== -->
+        <path d="M148,74 L175,46 L255,43 L290,66 L275,67 L195,66 Z" fill="url(#windshieldGrad)" stroke="rgba(0,191,255,0.5)" stroke-width="0.8"/>
+        <!-- Windshield A-pillar (left) -->
+        <path d="M148,74 L175,46" fill="none" stroke="#999" stroke-width="2"/>
+        <!-- Windshield A-pillar (right) -->
+        <path d="M255,43 L290,66" fill="none" stroke="#999" stroke-width="2"/>
+        <!-- Windshield wiper -->
+        <line x1="200" y1="72" x2="230" y2="52" stroke="#444" stroke-width="0.6"/>
+        <!-- Windshield reflection streaks -->
+        <path d="M160,68 L178,50 L195,48 L188,65 Z" fill="rgba(255,255,255,0.08)"/>
+        <path d="M210,66 L225,48 L240,47 L230,66 Z" fill="rgba(255,255,255,0.05)"/>
+
+        <!-- ===== ROOF ===== -->
+        <path d="M175,46 L195,34 L268,32 L295,42 L255,43 Z" fill="url(#roofGrad)" stroke="#bbb" stroke-width="0.6"/>
+        <!-- Roof center ridge -->
+        <line x1="200" y1="34" x2="280" y2="33" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+        <!-- Roof rain gutter -->
+        <line x1="180" y1="44" x2="290" y2="42" stroke="#777" stroke-width="0.4"/>
+
+        <!-- ===== GULL-WING DOOR DETAILS ===== -->
+        <!-- Door seam lines -->
+        <path d="M175,46 L195,74" fill="none" stroke="#666" stroke-width="1" opacity="0.7"/>
+        <path d="M255,43 L290,66" fill="none" stroke="#666" stroke-width="1" opacity="0.7"/>
+        <!-- Door hinge points -->
+        <circle cx="215" cy="36" r="1.5" fill="#888" stroke="#aaa" stroke-width="0.3"/>
+        <circle cx="250" cy="35" r="1.5" fill="#888" stroke="#aaa" stroke-width="0.3"/>
+
+        <!-- ===== REAR WINDOW ===== -->
+        <path d="M290,66 L295,42 L268,32 L335,55 L348,74 Z" fill="rgba(0,160,255,0.1)" stroke="rgba(0,191,255,0.25)" stroke-width="0.5"/>
+        <!-- Rear window louvres -->
+        <line x1="292" y1="62" x2="338" y2="60" stroke="rgba(100,100,100,0.4)" stroke-width="0.5"/>
+        <line x1="291" y1="57" x2="330" y2="56" stroke="rgba(100,100,100,0.4)" stroke-width="0.5"/>
+        <line x1="292" y1="52" x2="322" y2="52" stroke="rgba(100,100,100,0.4)" stroke-width="0.5"/>
+        <line x1="293" y1="47" x2="314" y2="47" stroke="rgba(100,100,100,0.4)" stroke-width="0.5"/>
+
+        <!-- ===== REAR DETAILS ===== -->
+        <!-- Rear quarter panel vents (louvers) -->
+        <line x1="350" y1="80" x2="365" y2="82" stroke="#777" stroke-width="0.6"/>
+        <line x1="350" y1="83" x2="368" y2="85" stroke="#777" stroke-width="0.6"/>
+        <line x1="350" y1="86" x2="370" y2="88" stroke="#777" stroke-width="0.6"/>
+        <line x1="350" y1="89" x2="373" y2="91" stroke="#777" stroke-width="0.6"/>
+        <line x1="350" y1="92" x2="375" y2="94" stroke="#777" stroke-width="0.6"/>
+        <!-- Rear bumper -->
+        <path d="M420,130 L435,148 L440,148 L432,130 Z" fill="#777" stroke="#888" stroke-width="0.4"/>
+        <path d="M425,148 L428,142 L435,140 L432,148 Z" fill="url(#chromeGrad)" stroke="#aaa" stroke-width="0.3"/>
+        <!-- Tail lights -->
+        <rect x="420" y="112" width="10" height="18" rx="1.5" fill="#220000" stroke="#444" stroke-width="0.5"/>
+        <rect x="421" y="113" width="8" height="7" rx="1" fill="#ff2222" opacity="0.9" filter="url(#carGlow)"/>
+        <rect x="421" y="121" width="8" height="4" rx="1" fill="#ff6600" opacity="0.7"/>
+        <rect x="421" y="126" width="8" height="3" rx="1" fill="#fff" opacity="0.5"/>
+        <!-- Rear reflector -->
+        <rect x="415" y="140" width="5" height="3" rx="1" fill="#ff3333" opacity="0.4"/>
+
+        <!-- ===== EXHAUST ===== -->
+        <rect x="432" y="140" width="10" height="3.5" rx="1.5" fill="#333" stroke="#555" stroke-width="0.4"/>
+        <ellipse cx="442" cy="141.75" rx="1.5" ry="1.75" fill="#222"/>
+        <rect x="432" y="135" width="10" height="3.5" rx="1.5" fill="#333" stroke="#555" stroke-width="0.4"/>
+        <ellipse cx="442" cy="136.75" rx="1.5" ry="1.75" fill="#222"/>
+
+        <!-- ===== SIDE MIRROR ===== -->
+        <path d="M142,76 L135,72 L133,74 L138,78 Z" fill="#999" stroke="#aaa" stroke-width="0.4"/>
+        <ellipse cx="134" cy="73" rx="5" ry="3.5" fill="#888" stroke="#aaa" stroke-width="0.4"/>
+        <ellipse cx="134" cy="73" rx="3.5" ry="2.5" fill="rgba(0,150,255,0.15)"/>
+
+        <!-- ===== ANTENNA ===== -->
+        <line x1="360" y1="55" x2="350" y2="18" stroke="#aaa" stroke-width="0.6"/>
+        <circle cx="350" cy="17" r="1" fill="#ccc"/>
+
+        <!-- ===== WHEEL WELLS ===== -->
+        <path d="M92,148 Q90,122 118,118 L165,118 Q185,122 185,148" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="0.6"/>
+        <path d="M300,148 Q298,122 325,118 L370,118 Q390,122 390,148" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="0.6"/>
+        <!-- Fender lips -->
+        <path d="M90,148 Q88,120 118,116" fill="none" stroke="url(#chromeGrad)" stroke-width="1" opacity="0.5"/>
+        <path d="M187,148 Q189,120 165,116" fill="none" stroke="url(#chromeGrad)" stroke-width="1" opacity="0.5"/>
+        <path d="M298,148 Q296,120 325,116" fill="none" stroke="url(#chromeGrad)" stroke-width="1" opacity="0.5"/>
+        <path d="M392,148 Q394,120 370,116" fill="none" stroke="url(#chromeGrad)" stroke-width="1" opacity="0.5"/>
+
+        <!-- ===== FRONT WHEEL ===== -->
+        <!-- Tire -->
+        <circle cx="140" cy="155" r="24" fill="url(#tireGrad)" stroke="#333" stroke-width="1.5"/>
+        <!-- Tire tread pattern -->
+        <circle cx="140" cy="155" r="24" fill="none" stroke="#252525" stroke-width="2" stroke-dasharray="3,4"/>
+        <!-- Rim outer -->
+        <circle cx="140" cy="155" r="17" fill="#444" stroke="#666" stroke-width="1"/>
+        <!-- Rim face -->
+        <circle cx="140" cy="155" r="15" fill="url(#hubGrad)"/>
+        <!-- 5-spoke design -->
+        <line x1="140" y1="141" x2="140" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="126.7" y1="150.7" x2="140" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="131" y1="163.3" x2="140" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="149" y1="163.3" x2="140" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="153.3" y1="150.7" x2="140" y2="155" stroke="#777" stroke-width="2.5"/>
+        <!-- Spoke highlights -->
+        <line x1="140" y1="142" x2="140" y2="152" stroke="#999" stroke-width="0.8"/>
+        <line x1="127.5" y1="151.2" x2="137" y2="154" stroke="#999" stroke-width="0.8"/>
+        <line x1="132" y1="162.5" x2="138" y2="156" stroke="#999" stroke-width="0.8"/>
+        <line x1="148.5" y1="162.5" x2="142" y2="156" stroke="#999" stroke-width="0.8"/>
+        <line x1="152.5" y1="151.2" x2="143" y2="154" stroke="#999" stroke-width="0.8"/>
+        <!-- Center cap -->
+        <circle cx="140" cy="155" r="5" fill="#666" stroke="#888" stroke-width="0.5"/>
+        <circle cx="140" cy="155" r="2.5" fill="#888"/>
+        <!-- Lug nuts -->
+        <circle cx="140" cy="148" r="1" fill="#999"/>
+        <circle cx="133.5" cy="152" r="1" fill="#999"/>
+        <circle cx="135.5" cy="159.5" r="1" fill="#999"/>
+        <circle cx="144.5" cy="159.5" r="1" fill="#999"/>
+        <circle cx="146.5" cy="152" r="1" fill="#999"/>
+        <!-- Brake disc visible -->
+        <circle cx="140" cy="155" r="13" fill="none" stroke="rgba(100,100,100,0.3)" stroke-width="0.5" stroke-dasharray="2,3"/>
+
+        <!-- ===== REAR WHEEL ===== -->
+        <circle cx="348" cy="155" r="24" fill="url(#tireGrad)" stroke="#333" stroke-width="1.5"/>
+        <circle cx="348" cy="155" r="24" fill="none" stroke="#252525" stroke-width="2" stroke-dasharray="3,4"/>
+        <circle cx="348" cy="155" r="17" fill="#444" stroke="#666" stroke-width="1"/>
+        <circle cx="348" cy="155" r="15" fill="url(#hubGrad)"/>
+        <line x1="348" y1="141" x2="348" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="334.7" y1="150.7" x2="348" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="339" y1="163.3" x2="348" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="357" y1="163.3" x2="348" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="361.3" y1="150.7" x2="348" y2="155" stroke="#777" stroke-width="2.5"/>
+        <line x1="348" y1="142" x2="348" y2="152" stroke="#999" stroke-width="0.8"/>
+        <line x1="335.5" y1="151.2" x2="345" y2="154" stroke="#999" stroke-width="0.8"/>
+        <line x1="340" y1="162.5" x2="346" y2="156" stroke="#999" stroke-width="0.8"/>
+        <line x1="356.5" y1="162.5" x2="350" y2="156" stroke="#999" stroke-width="0.8"/>
+        <line x1="360.5" y1="151.2" x2="351" y2="154" stroke="#999" stroke-width="0.8"/>
+        <circle cx="348" cy="155" r="5" fill="#666" stroke="#888" stroke-width="0.5"/>
+        <circle cx="348" cy="155" r="2.5" fill="#888"/>
+        <circle cx="348" cy="148" r="1" fill="#999"/>
+        <circle cx="341.5" cy="152" r="1" fill="#999"/>
+        <circle cx="343.5" cy="159.5" r="1" fill="#999"/>
+        <circle cx="352.5" cy="159.5" r="1" fill="#999"/>
+        <circle cx="354.5" cy="152" r="1" fill="#999"/>
+        <circle cx="348" cy="155" r="13" fill="none" stroke="rgba(100,100,100,0.3)" stroke-width="0.5" stroke-dasharray="2,3"/>
+
+        <!-- ===== MR. FUSION REACTOR ===== -->
+        <rect x="382" y="56" width="28" height="22" rx="3" fill="#606060" stroke="#888" stroke-width="0.6"/>
+        <!-- Mr. Fusion body details -->
+        <rect x="385" y="58" width="22" height="3" rx="1" fill="#555"/>
+        <rect x="385" y="63" width="22" height="3" rx="1" fill="#555"/>
+        <rect x="385" y="68" width="22" height="3" rx="1" fill="#555"/>
+        <!-- Mr. Fusion lid -->
+        <path d="M385,56 L388,48 L408,48 L411,56 Z" fill="#707070" stroke="#999" stroke-width="0.5"/>
+        <!-- Mr. Fusion handle -->
+        <rect x="394" y="45" width="8" height="4" rx="2" fill="#888" stroke="#aaa" stroke-width="0.3"/>
+        <!-- Mr. Fusion label -->
+        <text x="396" y="75" font-size="3.5" fill="#bbb" text-anchor="middle" font-family="Orbitron" letter-spacing="0.5">Mr.FUSION</text>
+        <!-- Mr. Fusion pipes -->
+        <path d="M382,65 L375,68 L375,78" fill="none" stroke="#666" stroke-width="1.5"/>
+        <path d="M410,65 L415,68 L415,75" fill="none" stroke="#666" stroke-width="1.5"/>
+
+        <!-- ===== TIME CIRCUIT INDICATORS ===== -->
+        <rect x="355" y="84" width="18" height="8" rx="1" fill="#222" stroke="#444" stroke-width="0.4"/>
+        <rect x="357" y="85.5" width="4" height="5" rx="0.5" fill="#ff4444">
+            <animate attributeName="opacity" values="1;0.3;1" dur="0.4s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="362" y="85.5" width="4" height="5" rx="0.5" fill="#44ff44">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" repeatCount="indefinite"/>
+        </rect>
+        <rect x="367" y="85.5" width="4" height="5" rx="0.5" fill="#ffd700">
+            <animate attributeName="opacity" values="1;0.5;1" dur="0.3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- ===== FLUX CAPACITOR GLOW (interior) ===== -->
+        <circle cx="240" cy="78" r="5" fill="#ffd700" opacity="0.7">
+            <animate attributeName="opacity" values="0.3;1;0.3" dur="0.4s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="240" cy="78" r="12" fill="none" stroke="#ffd700" stroke-width="1" opacity="0.2">
+            <animate attributeName="r" values="10;18;10" dur="1s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.3;0;0.3" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <!-- Flux Y-shape visible through window -->
+        <line x1="240" y1="78" x2="240" y2="68" stroke="#ffd700" stroke-width="0.5" opacity="0.3"/>
+        <line x1="240" y1="78" x2="233" y2="85" stroke="#ffd700" stroke-width="0.5" opacity="0.3"/>
+        <line x1="240" y1="78" x2="247" y2="85" stroke="#ffd700" stroke-width="0.5" opacity="0.3"/>
+
+        <!-- ===== BODY BADGES ===== -->
+        <!-- DMC badge -->
+        <rect x="218" y="128" width="28" height="8" rx="1" fill="rgba(0,0,0,0.2)" stroke="#999" stroke-width="0.3"/>
+        <text x="232" y="134" font-size="4.5" fill="#ccc" text-anchor="middle" font-family="Orbitron" letter-spacing="1.5" font-weight="700">DMC-12</text>
+        <!-- Side trim -->
+        <line x1="90" y1="110" x2="190" y2="110" stroke="url(#chromeGrad)" stroke-width="0.6" opacity="0.4"/>
+        <line x1="290" y1="110" x2="405" y2="110" stroke="url(#chromeGrad)" stroke-width="0.6" opacity="0.4"/>
+
+        <!-- ===== HOOD VENTS ===== -->
+        <line x1="100" y1="90" x2="140" y2="86" stroke="#888" stroke-width="0.4" opacity="0.5"/>
+        <line x1="100" y1="93" x2="140" y2="89" stroke="#888" stroke-width="0.4" opacity="0.5"/>
+        <line x1="100" y1="96" x2="140" y2="92" stroke="#888" stroke-width="0.4" opacity="0.5"/>
+
+        <!-- ===== LICENSE PLATE ===== -->
+        <rect x="185" y="148" width="35" height="12" rx="1.5" fill="#f5f5dc" stroke="#aaa" stroke-width="0.6"/>
+        <rect x="186" y="149" width="33" height="10" rx="1" fill="none" stroke="#ccc" stroke-width="0.3"/>
+        <text x="202.5" y="157" font-size="5.5" fill="#333" text-anchor="middle" font-family="monospace" font-weight="bold" letter-spacing="0.5">OUTATIME</text>
+        <!-- Plate screws -->
+        <circle cx="189" cy="154" r="0.8" fill="#999"/>
+        <circle cx="216" cy="154" r="0.8" fill="#999"/>
+
+        <!-- ===== UNDERCARRIAGE DETAILS ===== -->
+        <!-- Side skirt -->
+        <line x1="88" y1="148" x2="185" y2="148" stroke="#555" stroke-width="0.8"/>
+        <line x1="190" y1="148" x2="298" y2="148" stroke="#555" stroke-width="0.8"/>
+        <line x1="392" y1="148" x2="435" y2="148" stroke="#555" stroke-width="0.8"/>
+
+        <!-- ===== BLUE UNDERGLOW (time machine active) ===== -->
+        <rect x="100" y="168" width="280" height="3" rx="1.5" fill="#00bfff" opacity="0.25" filter="url(#softGlow)">
+            <animate attributeName="opacity" values="0.15;0.35;0.15" dur="1.5s" repeatCount="indefinite"/>
+        </rect>
+    </svg>
+</div>
+
+<!-- Flux Capacitor Fullscreen Overlay -->
+<div class="flux-overlay" id="fluxOverlay">
+    <div class="flux-box">
+        <div class="flux-housing">
+            <div class="flux-label">Flux-Kompensator</div>
+            <div class="flux-wires">
+                <div class="wire" style="left:20%;top:40%;height:35px;transform:rotate(15deg)"></div>
+                <div class="wire" style="left:75%;top:35%;height:40px;transform:rotate(-10deg)"></div>
+                <div class="wire" style="left:15%;top:70%;height:25px;transform:rotate(5deg)"></div>
+                <div class="wire" style="left:80%;top:72%;height:30px;transform:rotate(-20deg)"></div>
+            </div>
+            <div class="flux-ring"></div>
+            <div class="flux-y">
+                <div class="flux-arm-big"></div>
+                <div class="flux-arm-big"></div>
+                <div class="flux-arm-big"></div>
+            </div>
+            <div class="flux-center-orb"></div>
+            <div class="flux-caption">Temporale Verschiebung</div>
+            <div class="flux-speed" id="fluxSpeed">88 MPH</div>
+        </div>
+    </div>
+</div>
+
+<!-- Time Circuits Display -->
+<div class="time-circuits" id="timeCircuits">
+    <div class="time-row">
+        <span class="time-label red">Ziel-Zeit</span>
+        <span class="time-value red" id="destTime">--- -- ---- --:--</span>
+    </div>
+    <div class="time-row">
+        <span class="time-label green">Jetzt</span>
+        <span class="time-value green" id="presentTime">--- -- ---- --:--</span>
+    </div>
+    <div class="time-row">
+        <span class="time-label yellow">Abfahrt</span>
+        <span class="time-value yellow" id="departTime">--- -- ---- --:--</span>
+    </div>
+</div>
+
+<!-- Confetti -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Start Screen -->
+<div class="start-screen" id="startScreen">
+    <div class="bttf-logo">Zurück in die<br>Zukunft</div>
+    <div class="bttf-sub">Berni Edition</div>
+    <div class="speed-display" id="speedDisplay">Zielgeschwindigkeit: <span>88</span> MPH</div>
+    <button class="start-btn" id="startBtn" onclick="startSequence()">Zeitreise starten</button>
+</div>
+
+<!-- Main Content -->
+<div class="content" id="mainContent">
+    <div class="greeting" id="greeting">
+        <div class="subtitle">Alles Gute zum Geburtstag</div>
+        <h1>Happy Birthday</h1>
+        <span class="name">Berni!</span>
+    </div>
+    <div class="speedometer" id="speedometer">
+        <div class="speedo-ring"></div>
+        <div class="speedo-value" id="speedoValue">53</div>
+        <div class="speedo-mph">JAHRE</div>
+        <div class="speedo-label">& kein bisschen langsamer</div>
+    </div>
+    <div class="message" id="messageCard">
+        <p>
+            Lieber Papa, <span class="highlight">53 Jahre</span> &mdash;
+            und du legst immer noch keinen Rückwärtsgang ein.<br><br>
+            Wie Doc Brown schon sagte:<br>
+            <em class="highlight">"Wohin wir gehen, brauchen wir keine Straßen!"</em><br><br>
+            Auf die nächsten Abenteuer &mdash;
+            mit <span class="blue">Vollgas</span> und ohne Tempolimit.<br><br>
+            Alles Gute zum Geburtstag!<br><br>
+            Dein Pascal
+        </p>
+    </div>
+    <div class="actions" id="actions">
+        <button class="action-btn gold-btn" onclick="launchConfetti()">🎉 Konfetti</button>
+        <button class="action-btn blue-btn" onclick="triggerTimeTravel()">⚡ Zeitreise</button>
+        <button class="action-btn red-btn" onclick="launchFireworks()">🎆 Feuerwerk</button>
+        <button class="action-btn gold-btn" onclick="releaseBalloons()">🎈 Luftballons</button>
+    </div>
+</div>
+
+<!-- Music -->
+<audio id="bgMusic" src="Zeitbandit.mp3" loop preload="auto"></audio>
+<div class="music-control" id="musicBtn" onclick="toggleMusic()">🎵</div>
+
+<!-- Swipe Hint -->
+<div class="swipe-hint" id="swipeHint">
+    <span class="arrow">👆</span>
+    Wischen: ↑Konfetti ↓Ballons ←Zeitreise →Feuerwerk · Schütteln: Party!
+</div>
+
+<script>
+// ===== STARFIELD =====
+(function() {
+    const sf = document.getElementById('starfield');
+    for (let i = 0; i < 200; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        const size = Math.random() * 2.5 + 0.5;
+        s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${1+Math.random()*3}s;animation-delay:${Math.random()*3}s;`;
+        sf.appendChild(s);
+    }
+})();
+
+// ===== AUDIO ENGINE =====
+let audioCtx = null, musicPlaying = false, musicTimeout = null, masterGain = null;
+
+function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.5;
+    masterGain.connect(audioCtx.destination);
+}
+
+function playNote(freq, start, dur, type='triangle', vol=0.1, pan=0) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    const p = audioCtx.createStereoPanner();
+    osc.type = type; osc.frequency.setValueAtTime(freq, start); p.pan.value = pan;
+    g.gain.setValueAtTime(0, start);
+    g.gain.linearRampToValueAtTime(vol, start + 0.04);
+    g.gain.setValueAtTime(vol, start + dur * 0.7);
+    g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+    osc.connect(g); g.connect(p); p.connect(masterGain);
+    osc.start(start); osc.stop(start + dur);
+}
+
+function playDrum(start, type='kick') {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    if (type === 'kick') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, start);
+        osc.frequency.exponentialRampToValueAtTime(30, start + 0.15);
+        g.gain.setValueAtTime(0.25, start);
+        g.gain.exponentialRampToValueAtTime(0.001, start + 0.2);
+        osc.connect(g); g.connect(masterGain);
+        osc.start(start); osc.stop(start + 0.2);
+    } else if (type === 'hat') {
+        const bufSz = audioCtx.sampleRate * 0.05;
+        const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
+        const n = audioCtx.createBufferSource(); n.buffer = buf;
+        const hpf = audioCtx.createBiquadFilter(); hpf.type = 'highpass'; hpf.frequency.value = 8000;
+        g.gain.setValueAtTime(0.06, start);
+        g.gain.exponentialRampToValueAtTime(0.001, start + 0.05);
+        n.connect(hpf); hpf.connect(g); g.connect(masterGain);
+        n.start(start); n.stop(start + 0.06);
+    } else if (type === 'snare') {
+        const o2 = audioCtx.createOscillator();
+        const g2 = audioCtx.createGain();
+        o2.type = 'triangle';
+        o2.frequency.setValueAtTime(200, start);
+        o2.frequency.exponentialRampToValueAtTime(50, start + 0.1);
+        g2.gain.setValueAtTime(0.12, start);
+        g2.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
+        o2.connect(g2); g2.connect(masterGain);
+        o2.start(start); o2.stop(start + 0.15);
+        const bufSz = audioCtx.sampleRate * 0.08;
+        const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
+        const n = audioCtx.createBufferSource(); n.buffer = buf;
+        g.gain.setValueAtTime(0.1, start);
+        g.gain.exponentialRampToValueAtTime(0.001, start + 0.1);
+        n.connect(g); g.connect(masterGain);
+        n.start(start); n.stop(start + 0.12);
+    }
+}
+
+function playChord(freqs, start, dur, vol=0.04, type='triangle') {
+    freqs.forEach((f, i) => playNote(f, start, dur, type, vol, (i-1)*0.3));
+}
+
+function playSynthBass(freq, start, dur) {
+    playNote(freq, start, dur, 'sawtooth', 0.06);
+    playNote(freq * 0.5, start, dur, 'sine', 0.04);
+}
+
+// ===== MP3 MUSIC =====
+const bgMusic = document.getElementById('bgMusic');
+
+function startMusic() {
+    musicPlaying = true;
+    document.getElementById('musicBtn').classList.add('playing');
+    bgMusic.currentTime = 0;
+    bgMusic.play().catch(() => {});
+}
+
+function stopMusic() {
+    musicPlaying = false;
+    document.getElementById('musicBtn').classList.remove('playing');
+    bgMusic.pause();
+}
+
+function toggleMusic() { musicPlaying ? stopMusic() : startMusic(); }
+
+// ===== SFX =====
+function playSFX(type) {
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const now = audioCtx.currentTime;
+    if (type === 'whoosh') {
+        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(80, now);
+        o.frequency.exponentialRampToValueAtTime(2000, now + 0.3);
+        o.frequency.exponentialRampToValueAtTime(100, now + 0.8);
+        g.gain.setValueAtTime(0.15, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+        o.connect(g); g.connect(masterGain);
+        o.start(now); o.stop(now + 0.8);
+    } else if (type === 'zap') {
+        for (let i = 0; i < 4; i++) {
+            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            o.type = 'square';
+            o.frequency.setValueAtTime(4000 - i * 700, now + i * 0.04);
+            o.frequency.exponentialRampToValueAtTime(150, now + 0.35 + i * 0.04);
+            g.gain.setValueAtTime(0.06, now + i * 0.04);
+            g.gain.exponentialRampToValueAtTime(0.001, now + 0.35 + i * 0.04);
+            o.connect(g); g.connect(masterGain);
+            o.start(now + i * 0.04); o.stop(now + 0.4 + i * 0.04);
+        }
+    } else if (type === 'pop') {
+        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(600, now);
+        o.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+        g.gain.setValueAtTime(0.2, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.2);
+    } else if (type === 'boom') {
+        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(100, now);
+        o.frequency.exponentialRampToValueAtTime(20, now + 0.6);
+        g.gain.setValueAtTime(0.25, now);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.7);
+        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.exp(-i / (d.length*0.2));
+        const n = audioCtx.createBufferSource(); n.buffer = buf;
+        const g2 = audioCtx.createGain();
+        g2.gain.setValueAtTime(0.1, now);
+        g2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        n.connect(g2); g2.connect(masterGain); n.start(now + 0.05); n.stop(now + 0.4);
+    } else if (type === 'flux') {
+        // Flux capacitor charging sound
+        for (let i = 0; i < 6; i++) {
+            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+            o.type = 'sine';
+            const baseF = 300 + i * 200;
+            o.frequency.setValueAtTime(baseF, now + i * 0.15);
+            o.frequency.exponentialRampToValueAtTime(baseF * 3, now + i * 0.15 + 0.3);
+            g.gain.setValueAtTime(0.04, now + i * 0.15);
+            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+            o.connect(g); g.connect(masterGain);
+            o.start(now + i * 0.15); o.stop(now + i * 0.15 + 0.5);
+        }
+    }
+}
+
+// ===== CONFETTI =====
+const canvas = document.getElementById('confetti-canvas');
+const ctx = canvas.getContext('2d');
+let confettiPieces = [];
+function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener('resize', resizeCanvas); resizeCanvas();
+const confettiColors = ['#ff006e','#ffd700','#00bfff','#ff4500','#00f5d4','#9b5de5','#ff8c00','#44ff44'];
+
+class Confetti {
+    constructor() { this.reset(true); }
+    reset(init) {
+        this.x = Math.random() * canvas.width;
+        this.y = init ? Math.random() * -canvas.height : -10;
+        this.size = 4 + Math.random() * 6;
+        this.color = confettiColors[~~(Math.random()*confettiColors.length)];
+        this.vy = 1.5 + Math.random() * 3;
+        this.vx = Math.random() * 2 - 1;
+        this.rot = Math.random() * 360;
+        this.rv = (Math.random()-0.5) * 10;
+        this.wobble = Math.random() * 10;
+        this.life = 1;
+    }
+    update(keepAlive) {
+        this.y += this.vy;
+        this.x += this.vx + Math.sin(this.wobble += 0.03) * 0.5;
+        this.rot += this.rv;
+        if (this.y > canvas.height + 20) { if (keepAlive) this.reset(false); else this.life -= 0.05; }
+    }
+    draw() {
+        if (this.life <= 0) return;
+        ctx.save(); ctx.globalAlpha = this.life;
+        ctx.translate(this.x, this.y); ctx.rotate(this.rot * Math.PI / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
+        ctx.restore();
+    }
+}
+let confettiAlive = false, confettiKeepAlive = false;
+function animateConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettiPieces = confettiPieces.filter(c => c.life > 0);
+    confettiPieces.forEach(c => { c.update(confettiKeepAlive); c.draw(); });
+    if (confettiPieces.length > 0) requestAnimationFrame(animateConfetti);
+    else confettiAlive = false;
+}
+function launchConfetti() {
+    playSFX('pop');
+    for (let i = 0; i < 180; i++) confettiPieces.push(new Confetti());
+    confettiKeepAlive = true;
+    if (!confettiAlive) { confettiAlive = true; animateConfetti(); }
+    setTimeout(() => { confettiKeepAlive = false; }, 5000);
+}
+
+// ===== BALLOONS =====
+const balloonDefs = [
+    {color:'#ff006e', light:'#ff5aa0'}, {color:'#ffd700', light:'#ffe866'},
+    {color:'#00bfff', light:'#66d9ff'}, {color:'#ff4500', light:'#ff7744'},
+    {color:'#9b5de5', light:'#bb88ff'}, {color:'#00f5d4', light:'#66ffea'},
+];
+function createBalloon() {
+    const b = document.createElement('div'); b.className = 'balloon';
+    const def = balloonDefs[~~(Math.random()*balloonDefs.length)];
+    const size = 45 + Math.random() * 25;
+    const dur = 7 + Math.random() * 5;
+    b.style.cssText = `left:${Math.random()*92}%;--size:${size}px;--color:${def.color};--color-light:${def.light};--rot:${(Math.random()-0.5)*30}deg;animation-duration:${dur}s;`;
+    b.innerHTML = `<div class="balloon-body"></div><div class="balloon-string"></div>`;
+    document.body.appendChild(b);
+    setTimeout(() => b.remove(), dur * 1000);
+}
+function releaseBalloons() {
+    playSFX('pop');
+    for (let i = 0; i < 15; i++) setTimeout(createBalloon, i * 150);
+}
+
+// ===== FIREWORKS =====
+function createFirework(x, y) {
+    const colors = ['#ff006e','#ffd700','#00bfff','#ff4500','#00f5d4','#9b5de5'];
+    const color = colors[~~(Math.random()*colors.length)];
+    const count = 25 + ~~(Math.random()*15);
+    for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2;
+        const dist = 60 + Math.random() * 80;
+        const p = document.createElement('div');
+        p.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:${color};z-index:155;pointer-events:none;box-shadow:0 0 6px ${color};`;
+        document.body.appendChild(p);
+        p.animate([
+            { transform: 'translate(0,0) scale(1)', opacity: 1 },
+            { transform: `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px) scale(0.1)`, opacity: 0 }
+        ], { duration: 800 + Math.random() * 400, easing: 'cubic-bezier(0,.5,.5,1)', fill: 'forwards' });
+        setTimeout(() => p.remove(), 1500);
+    }
+}
+function launchFireworks() {
+    playSFX('boom');
+    for (let i = 0; i < 6; i++) {
+        setTimeout(() => {
+            createFirework(innerWidth*0.15+Math.random()*innerWidth*0.7, innerHeight*0.1+Math.random()*innerHeight*0.4);
+            if (i > 0) playSFX('boom');
+        }, i * 350);
+    }
+}
+
+// ===== TIME TRAVEL EFFECT (with fullscreen flux capacitor) =====
+let timeTravelActive = false;
+function triggerTimeTravel() {
+    if (timeTravelActive) return;
+    timeTravelActive = true;
+
+    const del = document.getElementById('delorean');
+    const flash = document.getElementById('timeFlash');
+    const lightning = document.getElementById('lightning');
+    const fluxOv = document.getElementById('fluxOverlay');
+
+    // Phase 1: Flux capacitor takes over the screen
+    playSFX('flux');
+    fluxOv.classList.add('active');
+
+    // Animate speed counter on flux overlay
+    const speedEl = document.getElementById('fluxSpeed');
+    let mph = 0;
+    const spdInterval = setInterval(() => {
+        mph += 3;
+        if (mph > 88) mph = 88;
+        speedEl.textContent = mph + ' MPH';
+        if (mph >= 88) {
+            clearInterval(spdInterval);
+            speedEl.style.color = '#ffd700';
+            speedEl.style.textShadow = '0 0 20px #ffd700, 0 0 40px #ff8c00';
+        }
+    }, 40);
+
+    // Phase 2: At 88 mph - lightning + flash
+    setTimeout(() => {
+        playSFX('zap');
+        lightning.classList.add('flash');
+    }, 1200);
+
+    setTimeout(() => { lightning.classList.remove('flash'); }, 1600);
+
+    // Phase 3: Bright blue flash, flux overlay fades, DeLorean action
+    setTimeout(() => {
+        flash.className = 'time-flash blue';
+        playSFX('whoosh');
+        fluxOv.classList.remove('active');
+    }, 1700);
+
+    setTimeout(() => {
+        flash.className = 'time-flash white';
+    }, 2000);
+
+    setTimeout(() => {
+        flash.className = 'time-flash';
+        // DeLorean fly away
+        del.className = 'delorean-container parked fly-away';
+        document.getElementById('fireTrails').classList.add('active');
+    }, 2300);
+
+    setTimeout(() => {
+        document.getElementById('fireTrails').classList.remove('active');
+    }, 3500);
+
+    // Reset everything
+    setTimeout(() => {
+        del.className = 'delorean-container parked';
+        del.style.opacity = '0';
+        speedEl.textContent = '88 MPH';
+        speedEl.style.color = '#ff4444';
+        speedEl.style.textShadow = '0 0 10px #ff4444';
+        setTimeout(() => { del.style.opacity = '1'; del.style.transition = 'opacity 1s'; }, 500);
+        timeTravelActive = false;
+    }, 3800);
+
+    randomizeTimeCircuits();
+}
+
+function randomizeTimeCircuits() {
+    const months = ['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
+    function randDate() {
+        const m = months[~~(Math.random()*12)];
+        const d = (~~(Math.random()*28)+1).toString().padStart(2,'0');
+        const y = (1950 + ~~(Math.random()*100)).toString();
+        const h = (~~(Math.random()*24)).toString().padStart(2,'0');
+        const min = (~~(Math.random()*60)).toString().padStart(2,'0');
+        return `${m} ${d} ${y} ${h}:${min}`;
+    }
+    document.getElementById('destTime').textContent = randDate();
+    document.getElementById('departTime').textContent = randDate();
+}
+
+function updatePresentTime() {
+    const now = new Date();
+    const months = ['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
+    const m = months[now.getMonth()];
+    const d = now.getDate().toString().padStart(2, '0');
+    const y = now.getFullYear();
+    const h = now.getHours().toString().padStart(2, '0');
+    const min = now.getMinutes().toString().padStart(2, '0');
+    document.getElementById('presentTime').textContent = `${m} ${d} ${y} ${h}:${min}`;
+}
+
+// ===== START SEQUENCE =====
+let started = false;
+function startSequence() {
+    if (started) return;
+    started = true;
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const btn = document.getElementById('startBtn');
+    const speedDisp = document.getElementById('speedDisplay');
+    btn.style.pointerEvents = 'none';
+
+    speedDisp.classList.add('visible');
+    let speed = 0;
+    const speedInterval = setInterval(() => {
+        speed += 2;
+        if (speed > 88) speed = 88;
+        speedDisp.querySelector('span').textContent = speed;
+        if (speed >= 88) clearInterval(speedInterval);
+    }, 40);
+
+    playSFX('whoosh');
+
+    setTimeout(() => {
+        playSFX('zap');
+        document.getElementById('lightning').classList.add('flash');
+        setTimeout(() => document.getElementById('lightning').classList.remove('flash'), 400);
+    }, 1600);
+
+    setTimeout(() => {
+        document.getElementById('timeFlash').className = 'time-flash white';
+    }, 1900);
+
+    setTimeout(() => {
+        document.getElementById('timeFlash').className = 'time-flash';
+        document.getElementById('startScreen').classList.add('hidden');
+
+        document.getElementById('mainContent').style.display = 'flex';
+        document.getElementById('timeCircuits').style.display = 'flex';
+        document.getElementById('musicBtn').style.display = 'flex';
+
+        // Set time circuits: destination = today, departure = 31.03.1973
+        document.getElementById('destTime').textContent = 'MÄR 29 2026 00:00';
+        document.getElementById('departTime').textContent = 'MÄR 31 1973 00:00';
+        updatePresentTime();
+        setInterval(updatePresentTime, 10000);
+
+        const del = document.getElementById('delorean');
+        del.classList.add('fly-in');
+        document.getElementById('fireTrails').classList.add('active');
+        playSFX('whoosh');
+
+        setTimeout(() => {
+            document.getElementById('fireTrails').classList.remove('active');
+            del.className = 'delorean-container parked';
+        }, 2600);
+
+        setTimeout(() => { document.getElementById('greeting').classList.add('visible'); }, 1500);
+        setTimeout(() => {
+            document.getElementById('speedometer').classList.add('visible');
+            animateSpeedoCounter();
+        }, 2500);
+        setTimeout(() => { document.getElementById('messageCard').classList.add('visible'); }, 3300);
+        setTimeout(() => { document.getElementById('actions').classList.add('visible'); }, 4000);
+
+        setTimeout(launchConfetti, 2000);
+        setTimeout(releaseBalloons, 3000);
+        setTimeout(startMusic, 1000);
+        enableShake();
+        showSwipeHint();
+    }, 2100);
+}
+
+function animateSpeedoCounter() {
+    const el = document.getElementById('speedoValue');
+    let val = 0;
+    const interval = setInterval(() => {
+        val += 1; el.textContent = val;
+        if (val >= 53) clearInterval(interval);
+    }, 30);
+}
+
+// ===== SPARKLE =====
+function createSparkle(x, y) {
+    for (let i = 0; i < 8; i++) {
+        const spark = document.createElement('div');
+        const angle = (i / 8) * Math.PI * 2;
+        const dist = 30 + Math.random() * 20;
+        spark.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:#ffd700;z-index:200;pointer-events:none;box-shadow:0 0 8px #ffd700;`;
+        document.body.appendChild(spark);
+        spark.animate([
+            { transform: 'translate(0,0) scale(1)', opacity: 1 },
+            { transform: `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
+        ], { duration: 500, fill: 'forwards' });
+        setTimeout(() => spark.remove(), 600);
+    }
+}
+
+function isInteractive(el) {
+    return el.closest('.start-screen') || el.closest('button') || el.closest('.music-control');
+}
+
+document.addEventListener('click', (e) => { if (!isInteractive(e.target)) createSparkle(e.clientX, e.clientY); });
+
+let touchMoved = false;
+document.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+document.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
+document.addEventListener('touchend', (e) => {
+    if (touchMoved || !started || isInteractive(e.target)) return;
+    const t = e.changedTouches[0];
+    if (t) createSparkle(t.clientX, t.clientY);
+}, { passive: true });
+
+// ===== SWIPE GESTURES =====
+let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
+document.addEventListener('touchstart', (e) => {
+    if (!started) return;
+    const t = e.touches[0];
+    swipeStartX = t.clientX; swipeStartY = t.clientY; swipeStartTime = Date.now();
+}, { passive: true });
+document.addEventListener('touchend', (e) => {
+    if (!started || isInteractive(e.target)) return;
+    const t = e.changedTouches[0]; if (!t) return;
+    const dx = t.clientX - swipeStartX, dy = t.clientY - swipeStartY;
+    if (Date.now() - swipeStartTime > 400) return;
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    if (ax < 50 && ay < 50) return;
+    if (ay > ax) { dy < 0 ? launchConfetti() : releaseBalloons(); }
+    else { dx < 0 ? triggerTimeTravel() : launchFireworks(); }
+}, { passive: true });
+
+// ===== SHAKE =====
+let lastShakeTime = 0, lastAccel = { x:0, y:0, z:0 };
+function handleMotion(e) {
+    if (!started) return;
+    const a = e.accelerationIncludingGravity; if (!a || a.x == null) return;
+    const d = Math.abs(a.x-lastAccel.x) + Math.abs(a.y-lastAccel.y) + Math.abs(a.z-lastAccel.z);
+    lastAccel = { x:a.x, y:a.y, z:a.z };
+    if (d > 20 && Date.now() - lastShakeTime > 1500) {
+        lastShakeTime = Date.now();
+        launchConfetti();
+        setTimeout(launchFireworks, 300);
+        setTimeout(releaseBalloons, 600);
+    }
+}
+function enableShake() {
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission().then(r => {
+            if (r === 'granted') window.addEventListener('devicemotion', handleMotion, { passive: true });
+        }).catch(() => {});
+    } else if (typeof DeviceMotionEvent !== 'undefined') {
+        window.addEventListener('devicemotion', handleMotion, { passive: true });
+    }
+}
+
+function showSwipeHint() {
+    const h = document.getElementById('swipeHint'); if (!h) return;
+    setTimeout(() => h.classList.add('visible'), 4500);
+    setTimeout(() => h.classList.remove('visible'), 12000);
+}
+
+// ===== KEYBOARD =====
+document.addEventListener('keydown', (e) => {
+    if (!started) return;
+    switch(e.key.toLowerCase()) {
+        case 'c': launchConfetti(); break;
+        case 'f': launchFireworks(); break;
+        case 'b': releaseBalloons(); break;
+        case 't': triggerTimeTravel(); break;
+        case 'm': toggleMusic(); break;
+    }
+});
+</script>
+</body>
+</html>
