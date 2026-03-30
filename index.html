@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zurück in die Zukunft - Berni wird 53!</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;600;800&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             background: #000;
             overflow-x: hidden;
@@ -19,1168 +26,1916 @@
         }
 
         /* STARFIELD */
-        .starfield { position: fixed; inset: 0; z-index: 0; }
+        .starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
         .star {
-            position: absolute; background: #fff; border-radius: 50%;
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
             animation: twinkle var(--dur) ease-in-out infinite alternate;
         }
-        @keyframes twinkle { 0%{opacity:.2} 100%{opacity:1} }
+
+        @keyframes twinkle {
+            0% {
+                opacity: .2
+            }
+
+            100% {
+                opacity: 1
+            }
+        }
 
         /* ROAD */
         .road {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 40vh;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40vh;
             background: linear-gradient(to bottom, transparent 0%, #111 20%, #1a1a1a 100%);
-            perspective: 600px; z-index: 1; overflow: hidden;
+            perspective: 600px;
+            z-index: 1;
+            overflow: hidden;
         }
+
         .road-lines {
-            position: absolute; bottom: 0; left: 50%; width: 6px; height: 100%;
-            transform-origin: bottom center; transform: translateX(-50%) rotateX(60deg);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 6px;
+            height: 100%;
+            transform-origin: bottom center;
+            transform: translateX(-50%) rotateX(60deg);
         }
+
         .road-dash {
-            width: 6px; height: 30px; background: #ffd700; margin-bottom: 25px;
-            border-radius: 2px; animation: roadScroll 1.5s linear infinite; opacity: 0.7;
+            width: 6px;
+            height: 30px;
+            background: #ffd700;
+            margin-bottom: 25px;
+            border-radius: 2px;
+            animation: roadScroll 1.5s linear infinite;
+            opacity: 0.7;
         }
-        @keyframes roadScroll { 0%{transform:translateY(-55px)} 100%{transform:translateY(0)} }
+
+        @keyframes roadScroll {
+            0% {
+                transform: translateY(-55px)
+            }
+
+            100% {
+                transform: translateY(0)
+            }
+        }
 
 
         /* START SCREEN */
         .start-screen {
-            position: fixed; inset: 0; z-index: 200;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background: radial-gradient(ellipse at center, #0a0a2e 0%, #000 70%);
             transition: opacity 1.2s ease, visibility 1.2s ease;
         }
-        .start-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .start-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         .bttf-logo {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 5vw, 3rem);
-            font-weight: 900; text-transform: uppercase; letter-spacing: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.4rem, 5vw, 3rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
             background: linear-gradient(180deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255,165,0,0.5));
-            text-align: center; line-height: 1.3; margin-bottom: 15px;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255, 165, 0, 0.5));
+            text-align: center;
+            line-height: 1.3;
+            margin-bottom: 15px;
         }
+
         .bttf-sub {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-            color: #00bfff; letter-spacing: 6px;
-            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff; margin-bottom: 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.8rem, 2.5vw, 1.2rem);
+            color: #00bfff;
+            letter-spacing: 6px;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+            margin-bottom: 40px;
         }
+
         .speed-display {
-            font-family: 'Orbitron', sans-serif; font-size: 1rem; color: #ff4500;
-            margin-bottom: 30px; opacity: 0; transition: opacity 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #ff4500;
+            margin-bottom: 30px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        .speed-display.visible { opacity: 1; }
-        .speed-display span { font-size: 2rem; color: #ffd700; text-shadow: 0 0 15px #ffd700; }
+
+        .speed-display.visible {
+            opacity: 1;
+        }
+
+        .speed-display span {
+            font-size: 2rem;
+            color: #ffd700;
+            text-shadow: 0 0 15px #ffd700;
+        }
+
         .start-btn {
-            padding: 18px 55px; font-size: 1.3rem; font-family: 'Orbitron', sans-serif;
-            font-weight: 700; background: transparent; border: 2px solid #00bfff;
-            color: #00bfff; cursor: pointer; text-transform: uppercase; letter-spacing: 3px;
-            position: relative; overflow: hidden; transition: all 0.4s ease;
-            box-shadow: 0 0 15px rgba(0,191,255,0.3), inset 0 0 15px rgba(0,191,255,0.1);
-            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+            padding: 18px 55px;
+            font-size: 1.3rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: transparent;
+            border: 2px solid #00bfff;
+            color: #00bfff;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3), inset 0 0 15px rgba(0, 191, 255, 0.1);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
+
         .start-btn:hover {
-            background: rgba(0,191,255,0.15);
-            box-shadow: 0 0 30px rgba(0,191,255,0.5), inset 0 0 30px rgba(0,191,255,0.2);
+            background: rgba(0, 191, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.5), inset 0 0 30px rgba(0, 191, 255, 0.2);
             transform: scale(1.05);
         }
+
         .start-btn::before {
-            content: ''; position: absolute; top: -2px; left: -100%;
-            width: 100%; height: calc(100% + 4px);
-            background: linear-gradient(90deg, transparent, rgba(0,191,255,0.4), transparent);
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -100%;
+            width: 100%;
+            height: calc(100% + 4px);
+            background: linear-gradient(90deg, transparent, rgba(0, 191, 255, 0.4), transparent);
             animation: btnSweep 2.5s linear infinite;
         }
-        @keyframes btnSweep { 0%{left:-100%} 100%{left:100%} }
+
+        @keyframes btnSweep {
+            0% {
+                left: -100%
+            }
+
+            100% {
+                left: 100%
+            }
+        }
 
 
         /* FLUX CAPACITOR FULLSCREEN OVERLAY */
         .flux-overlay {
-            position: fixed; inset: 0; z-index: 250;
-            background: rgba(0,0,0,0.92);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; pointer-events: none;
+            position: fixed;
+            inset: 0;
+            z-index: 250;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
             transition: opacity 0.4s ease, visibility 0.4s ease;
         }
-        .flux-overlay.active { opacity: 1; visibility: visible; }
+
+        .flux-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
         .flux-overlay .flux-box {
-            position: relative; width: 320px; height: 320px;
+            position: relative;
+            width: 320px;
+            height: 320px;
         }
+
         .flux-overlay .flux-housing {
-            position: absolute; inset: 0;
-            border: 3px solid #555; border-radius: 12px;
+            position: absolute;
+            inset: 0;
+            border: 3px solid #555;
+            border-radius: 12px;
             background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
-            box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 0 30px rgba(0,191,255,0.2);
+            box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 191, 255, 0.2);
         }
+
         .flux-overlay .flux-label {
-            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 0.5rem; letter-spacing: 3px;
-            color: #666; text-transform: uppercase;
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.5rem;
+            letter-spacing: 3px;
+            color: #666;
+            text-transform: uppercase;
         }
+
         .flux-overlay .flux-y {
-            position: absolute; width: 100%; height: 100%;
+            position: absolute;
+            width: 100%;
+            height: 100%;
         }
+
         .flux-overlay .flux-arm-big {
-            position: absolute; left: 50%; top: 50%;
-            width: 6px; height: 110px; margin-left: -3px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 6px;
+            height: 110px;
+            margin-left: -3px;
             transform-origin: top center;
             background: linear-gradient(to bottom, #ffd700, #ff8c00);
             border-radius: 3px;
             box-shadow: 0 0 15px #ffd700, 0 0 30px #ff8c00;
             opacity: 0.4;
         }
-        .flux-overlay .flux-arm-big:nth-child(1) { transform: rotate(0deg); }
-        .flux-overlay .flux-arm-big:nth-child(2) { transform: rotate(120deg); }
-        .flux-overlay .flux-arm-big:nth-child(3) { transform: rotate(240deg); }
+
+        .flux-overlay .flux-arm-big:nth-child(1) {
+            transform: rotate(0deg);
+        }
+
+        .flux-overlay .flux-arm-big:nth-child(2) {
+            transform: rotate(120deg);
+        }
+
+        .flux-overlay .flux-arm-big:nth-child(3) {
+            transform: rotate(240deg);
+        }
+
         .flux-overlay.active .flux-arm-big {
             animation: fluxArmPulse 0.15s ease-in-out infinite alternate;
         }
-        .flux-overlay .flux-arm-big:nth-child(2) { animation-delay: 0.05s; }
-        .flux-overlay .flux-arm-big:nth-child(3) { animation-delay: 0.1s; }
+
+        .flux-overlay .flux-arm-big:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .flux-overlay .flux-arm-big:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
         @keyframes fluxArmPulse {
-            0% { opacity: 0.3; box-shadow: 0 0 8px #ffd700; background: linear-gradient(to bottom, #aa7700, #885500); }
-            100% { opacity: 1; box-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00, 0 0 90px rgba(255,140,0,0.3); background: linear-gradient(to bottom, #ffd700, #ff8c00); }
+            0% {
+                opacity: 0.3;
+                box-shadow: 0 0 8px #ffd700;
+                background: linear-gradient(to bottom, #aa7700, #885500);
+            }
+
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 30px #ffd700, 0 0 60px #ff8c00, 0 0 90px rgba(255, 140, 0, 0.3);
+                background: linear-gradient(to bottom, #ffd700, #ff8c00);
+            }
         }
+
         .flux-overlay .flux-center-orb {
-            position: absolute; top: 50%; left: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 30px; height: 30px; border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             background: #ffd700;
-            box-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00, 0 0 60px rgba(255,215,0,0.5);
+            box-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00, 0 0 60px rgba(255, 215, 0, 0.5);
         }
+
         .flux-overlay.active .flux-center-orb {
             animation: orbPulse 0.2s ease-in-out infinite alternate;
         }
+
         @keyframes orbPulse {
-            0% { box-shadow: 0 0 15px #ffd700, 0 0 30px #ff8c00; transform: translate(-50%,-50%) scale(0.9); }
-            100% { box-shadow: 0 0 40px #ffd700, 0 0 80px #ff8c00, 0 0 120px rgba(255,215,0,0.4); transform: translate(-50%,-50%) scale(1.15); }
+            0% {
+                box-shadow: 0 0 15px #ffd700, 0 0 30px #ff8c00;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+
+            100% {
+                box-shadow: 0 0 40px #ffd700, 0 0 80px #ff8c00, 0 0 120px rgba(255, 215, 0, 0.4);
+                transform: translate(-50%, -50%) scale(1.15);
+            }
         }
+
         .flux-overlay .flux-ring {
-            position: absolute; top: 50%; left: 50%;
-            width: 200px; height: 200px; margin: -100px 0 0 -100px;
-            border: 2px solid rgba(255,215,0,0.2); border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            margin: -100px 0 0 -100px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
         }
+
         .flux-overlay.active .flux-ring {
             animation: ringPulse 0.5s ease-in-out infinite alternate;
         }
+
         @keyframes ringPulse {
-            0% { border-color: rgba(255,215,0,0.1); transform: scale(0.95); }
-            100% { border-color: rgba(255,215,0,0.5); transform: scale(1.05); box-shadow: 0 0 20px rgba(255,215,0,0.2); }
+            0% {
+                border-color: rgba(255, 215, 0, 0.1);
+                transform: scale(0.95);
+            }
+
+            100% {
+                border-color: rgba(255, 215, 0, 0.5);
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            }
         }
+
         .flux-overlay .flux-speed {
-            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 900;
-            color: #ff4444; text-shadow: 0 0 10px #ff4444;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ff4444;
+            text-shadow: 0 0 10px #ff4444;
             letter-spacing: 4px;
         }
+
         .flux-overlay .flux-caption {
-            position: absolute; bottom: 55px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 0.5rem;
-            color: #00bfff; letter-spacing: 4px; text-transform: uppercase;
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.5rem;
+            color: #00bfff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
             text-shadow: 0 0 8px #00bfff;
         }
+
         .flux-overlay .flux-wires {
-            position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
         }
+
         .flux-overlay .wire {
-            position: absolute; width: 2px; background: #333;
+            position: absolute;
+            width: 2px;
+            background: #333;
             border-radius: 1px;
         }
 
         /* TIME DISPLAY */
         .time-circuits {
-            position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 80; display: none; flex-direction: column; gap: 4px;
-            background: rgba(0,0,0,0.9); border: 1px solid #333; border-radius: 8px;
-            padding: 8px 12px; font-family: 'Orbitron', sans-serif;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8); max-width: 95vw;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 80;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            max-width: 95vw;
         }
-        .time-row { display: flex; align-items: center; gap: 6px; font-size: 0.55rem; letter-spacing: 1px; }
-        .time-label { width: 70px; text-align: right; text-transform: uppercase; font-size: 0.5rem; }
-        .time-label.red { color: #ff4444; }
-        .time-label.green { color: #44ff44; }
-        .time-label.yellow { color: #ffaa00; }
+
+        .time-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+        }
+
+        .time-label {
+            width: 70px;
+            text-align: right;
+            text-transform: uppercase;
+            font-size: 0.5rem;
+        }
+
+        .time-label.red {
+            color: #ff4444;
+        }
+
+        .time-label.green {
+            color: #44ff44;
+        }
+
+        .time-label.yellow {
+            color: #ffaa00;
+        }
+
         .time-value {
-            font-size: 0.7rem; padding: 2px 6px; background: #111;
-            border: 1px solid #333; border-radius: 3px; letter-spacing: 1px;
-            min-width: 140px; text-align: center;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 3px;
+            letter-spacing: 1px;
+            min-width: 140px;
+            text-align: center;
         }
-        .time-value.red { color: #ff4444; text-shadow: 0 0 8px #ff4444; }
-        .time-value.green { color: #44ff44; text-shadow: 0 0 8px #44ff44; }
-        .time-value.yellow { color: #ffaa00; text-shadow: 0 0 8px #ffaa00; }
+
+        .time-value.red {
+            color: #ff4444;
+            text-shadow: 0 0 8px #ff4444;
+        }
+
+        .time-value.green {
+            color: #44ff44;
+            text-shadow: 0 0 8px #44ff44;
+        }
+
+        .time-value.yellow {
+            color: #ffaa00;
+            text-shadow: 0 0 8px #ffaa00;
+        }
 
         /* MAIN CONTENT */
         .content {
-            position: relative; z-index: 10; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            min-height: 100vh; padding: 90px 16px 80px; text-align: center;
+            position: relative;
+            z-index: 10;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 90px 16px 80px;
+            text-align: center;
         }
+
         .greeting {
-            opacity: 0; transform: translateY(30px);
+            opacity: 0;
+            transform: translateY(30px);
             transition: all 1s ease;
         }
-        .greeting.visible { opacity: 1; transform: translateY(0); }
-        .greeting .subtitle {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(0.7rem, 2vw, 1rem);
-            color: #00bfff; letter-spacing: 8px; text-transform: uppercase;
-            text-shadow: 0 0 10px #00bfff; margin-bottom: 10px;
+
+        .greeting.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
+
+        .greeting .subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.7rem, 2vw, 1rem);
+            color: #00bfff;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px #00bfff;
+            margin-bottom: 10px;
+        }
+
         .greeting h1 {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 5rem);
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 8vw, 5rem);
             font-weight: 900;
             background: linear-gradient(180deg, #ffd700 0%, #ff8c00 50%, #ff4500 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 25px rgba(255,165,0,0.6));
-            line-height: 1.1; text-transform: uppercase;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255, 165, 0, 0.6));
+            line-height: 1.1;
+            text-transform: uppercase;
         }
+
         .greeting .name {
-            font-family: 'Orbitron', sans-serif; font-size: clamp(2.5rem, 10vw, 6rem);
-            font-weight: 900; display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 10vw, 6rem);
+            font-weight: 900;
+            display: block;
             background: linear-gradient(180deg, #00e5ff, #00bfff, #0088cc);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 30px rgba(0,191,255,0.6)); margin: 5px 0 20px;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 30px rgba(0, 191, 255, 0.6));
+            margin: 5px 0 20px;
         }
 
         /* SPEEDOMETER */
         .speedometer {
-            position: relative; width: 180px; height: 180px; margin: 15px auto;
-            opacity: 0; transform: scale(0);
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 15px auto;
+            opacity: 0;
+            transform: scale(0);
             transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        .speedometer.visible { opacity: 1; transform: scale(1); }
+
+        .speedometer.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
         .speedo-ring {
-            position: absolute; inset: 0; border: 3px solid #333; border-radius: 50%;
+            position: absolute;
+            inset: 0;
+            border: 3px solid #333;
+            border-radius: 50%;
             background: radial-gradient(circle, #111 60%, #000 100%);
         }
+
         .speedo-ring::before {
-            content: ''; position: absolute; inset: -5px; border-radius: 50%;
-            border: 2px solid transparent; border-top-color: #00bfff; border-right-color: #ffd700;
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #00bfff;
+            border-right-color: #ffd700;
             animation: speedoSpin 3s linear infinite;
         }
-        @keyframes speedoSpin { to { transform: rotate(360deg); } }
+
+        @keyframes speedoSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .speedo-value {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-family: 'Orbitron', sans-serif; font-size: 3.5rem; font-weight: 900;
-            color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 20px #ffd700, 0 0 40px #ff8c00;
         }
+
         .speedo-label {
-            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 0.55rem;
-            color: #00bfff; letter-spacing: 3px; text-transform: uppercase; white-space: nowrap;
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            color: #00bfff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
+
         .speedo-mph {
-            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
-            color: #ff4500; letter-spacing: 2px;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            color: #ff4500;
+            letter-spacing: 2px;
         }
 
         /* MESSAGE */
         .message {
-            max-width: 600px; width: 100%; margin: 20px auto; padding: 24px 20px;
-            background: rgba(0,191,255,0.03); backdrop-filter: blur(10px);
-            border-radius: 12px; border: 1px solid rgba(0,191,255,0.2);
-            box-shadow: 0 0 30px rgba(0,191,255,0.1), inset 0 0 30px rgba(0,0,0,0.3);
-            opacity: 0; transform: translateY(30px); transition: all 1s ease;
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 24px 20px;
+            background: rgba(0, 191, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 191, 255, 0.1), inset 0 0 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
         }
-        .message.visible { opacity: 1; transform: translateY(0); }
-        .message p { color: #ccc; font-size: 1rem; line-height: 1.8; font-weight: 300; }
-        .message .highlight { color: #ffd700; font-weight: 600; }
-        .message .blue { color: #00bfff; font-weight: 600; }
+
+        .message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message p {
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .message .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        .message .blue {
+            color: #00bfff;
+            font-weight: 600;
+        }
 
         /* SLIDESHOW */
         .slideshow {
-            position: relative; width: 92vw; max-width: 600px; margin: 20px auto;
-            aspect-ratio: 3/4; border-radius: 12px; overflow: hidden;
-            border: 2px solid rgba(0,191,255,0.3);
-            box-shadow: 0 0 25px rgba(0,191,255,0.15), 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            width: 92vw;
+            max-width: 600px;
+            margin: 20px auto;
+            aspect-ratio: 3/4;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 191, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.15), 0 4px 20px rgba(0, 0, 0, 0.5);
         }
+
         .slideshow img {
-            position: absolute; inset: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
             transition: opacity 1s ease-in-out;
         }
-        .slideshow img.active { opacity: 1; }
+
+        .slideshow img.active {
+            opacity: 1;
+        }
+
         .slideshow-wrap {
-            opacity: 0; transform: translateY(30px); transition: all 1s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
         }
-        .slideshow-wrap.visible { opacity: 1; transform: translateY(0); }
+
+        .slideshow-wrap.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .slideshow-counter {
-            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-            font-family: 'Orbitron', sans-serif; font-size: 0.5rem;
-            color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.5);
-            padding: 3px 10px; border-radius: 10px; letter-spacing: 2px; z-index: 2;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 10px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+            z-index: 2;
         }
+
         .slideshow-dots {
-            display: flex; justify-content: center; gap: 6px; margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 10px;
         }
+
         .slideshow-dot {
-            width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(0,191,255,0.4); transition: all 0.3s;
-            cursor: pointer; -webkit-tap-highlight-color: transparent;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 191, 255, 0.4);
+            transition: all 0.3s;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
+
         .slideshow-dot.active {
-            background: #00bfff; box-shadow: 0 0 8px rgba(0,191,255,0.6);
+            background: #00bfff;
+            box-shadow: 0 0 8px rgba(0, 191, 255, 0.6);
         }
 
         /* BUTTONS */
         .actions {
-            display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-            margin: 20px 0; opacity: 0; transition: opacity 1s ease;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 1s ease;
         }
-        .actions.visible { opacity: 1; }
+
+        .actions.visible {
+            opacity: 1;
+        }
+
         .action-btn {
-            padding: 12px 28px; font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-            background: transparent; border: 1px solid; cursor: pointer;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
-            user-select: none; -webkit-user-select: none;
+            padding: 12px 28px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: transparent;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
-        .action-btn:active { transform: scale(0.95) !important; }
-        .action-btn.blue-btn { color: #00bfff; border-color: #00bfff; box-shadow: 0 0 10px rgba(0,191,255,0.2); }
-        .action-btn.blue-btn:hover { background: rgba(0,191,255,0.15); box-shadow: 0 0 25px rgba(0,191,255,0.4); transform: translateY(-2px); }
-        .action-btn.gold-btn { color: #ffd700; border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.2); }
-        .action-btn.gold-btn:hover { background: rgba(255,215,0,0.15); box-shadow: 0 0 25px rgba(255,215,0,0.4); transform: translateY(-2px); }
-        .action-btn.red-btn { color: #ff4500; border-color: #ff4500; box-shadow: 0 0 10px rgba(255,69,0,0.2); }
-        .action-btn.red-btn:hover { background: rgba(255,69,0,0.15); box-shadow: 0 0 25px rgba(255,69,0,0.4); transform: translateY(-2px); }
+
+        .action-btn:active {
+            transform: scale(0.95) !important;
+        }
+
+        .action-btn.blue-btn {
+            color: #00bfff;
+            border-color: #00bfff;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+        }
+
+        .action-btn.blue-btn:hover {
+            background: rgba(0, 191, 255, 0.15);
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.gold-btn {
+            color: #ffd700;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+
+        .action-btn.gold-btn:hover {
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.red-btn {
+            color: #ff4500;
+            border-color: #ff4500;
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.2);
+        }
+
+        .action-btn.red-btn:hover {
+            background: rgba(255, 69, 0, 0.15);
+            box-shadow: 0 0 25px rgba(255, 69, 0, 0.4);
+            transform: translateY(-2px);
+        }
 
         /* CONFETTI CANVAS */
-        #confetti-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 150; }
+        #confetti-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 150;
+        }
 
         /* TIME FLASH */
         .time-flash {
-            position: fixed; inset: 0; z-index: 300;
-            pointer-events: none; opacity: 0;
+            position: fixed;
+            inset: 0;
+            z-index: 300;
+            pointer-events: none;
+            opacity: 0;
         }
+
         .time-flash.blue {
-            background: radial-gradient(circle, rgba(0,191,255,0.9) 0%, rgba(0,100,200,0.6) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.9) 0%, rgba(0, 100, 200, 0.6) 40%, transparent 70%);
             animation: flashBlue 0.4s ease-out forwards;
         }
+
         .time-flash.white {
-            background: #fff; opacity: 1;
+            background: #fff;
+            opacity: 1;
             animation: flashWhite 0.3s ease-out forwards;
         }
-        @keyframes flashBlue { 0%{opacity:1} 100%{opacity:0} }
-        @keyframes flashWhite { 0%{opacity:1} 50%{opacity:0.6} 100%{opacity:0} }
+
+        @keyframes flashBlue {
+            0% {
+                opacity: 1
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
+
+        @keyframes flashWhite {
+            0% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.6
+            }
+
+            100% {
+                opacity: 0
+            }
+        }
 
         /* LIGHTNING */
         .lightning {
-            position: fixed; top: 0; left: 0; width: 100%; height: 50%;
-            z-index: 95; pointer-events: none; opacity: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            z-index: 95;
+            pointer-events: none;
+            opacity: 0;
         }
-        .lightning.flash { animation: lightningFlash 0.3s ease; }
+
+        .lightning.flash {
+            animation: lightningFlash 0.3s ease;
+        }
+
         @keyframes lightningFlash {
-            0%{opacity:0} 8%{opacity:1} 15%{opacity:0.2} 25%{opacity:0.9}
-            40%{opacity:0.1} 50%{opacity:0.7} 70%{opacity:0} 100%{opacity:0}
+            0% {
+                opacity: 0
+            }
+
+            8% {
+                opacity: 1
+            }
+
+            15% {
+                opacity: 0.2
+            }
+
+            25% {
+                opacity: 0.9
+            }
+
+            40% {
+                opacity: 0.1
+            }
+
+            50% {
+                opacity: 0.7
+            }
+
+            70% {
+                opacity: 0
+            }
+
+            100% {
+                opacity: 0
+            }
         }
 
         /* MUSIC CONTROL */
         .music-control {
-            position: fixed; bottom: 20px; left: 20px; z-index: 160;
-            background: rgba(0,0,0,0.7); border: 1px solid #00bfff;
-            border-radius: 50%; width: 54px; height: 54px;
-            display: none; align-items: center; justify-content: center;
-            cursor: pointer; font-size: 1.3rem; transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(0,191,255,0.3);
-            -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 160;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00bfff;
+            border-radius: 50%;
+            width: 54px;
+            height: 54px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
-        .music-control:hover { box-shadow: 0 0 25px rgba(0,191,255,0.5); transform: scale(1.1); }
+
+        .music-control:hover {
+            box-shadow: 0 0 25px rgba(0, 191, 255, 0.5);
+            transform: scale(1.1);
+        }
+
         .music-control.playing {
-            border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
             animation: musicPulse 1.5s ease-in-out infinite;
         }
-        @keyframes musicPulse { 0%,100%{box-shadow:0 0 10px rgba(255,215,0,0.3)} 50%{box-shadow:0 0 25px rgba(255,215,0,0.6)} }
+
+        @keyframes musicPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px rgba(255, 215, 0, 0.3)
+            }
+
+            50% {
+                box-shadow: 0 0 25px rgba(255, 215, 0, 0.6)
+            }
+        }
 
         /* BALLOONS */
-        .balloon { position: fixed; bottom: -180px; z-index: 5; pointer-events: none; animation: balloonFloat linear forwards; }
+        .balloon {
+            position: fixed;
+            bottom: -180px;
+            z-index: 5;
+            pointer-events: none;
+            animation: balloonFloat linear forwards;
+        }
+
         .balloon-body {
-            width: var(--size); height: calc(var(--size) * 1.25);
+            width: var(--size);
+            height: calc(var(--size) * 1.25);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             background: radial-gradient(circle at 30% 30%, var(--color-light), var(--color));
-            position: relative; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+            position: relative;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
         }
+
         .balloon-body::after {
-            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
-            border-left: 5px solid transparent; border-right: 5px solid transparent;
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
             border-top: 9px solid var(--color);
         }
-        .balloon-string { width: 1px; height: 70px; background: rgba(255,255,255,0.3); margin: 0 auto; }
+
+        .balloon-string {
+            width: 1px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 0 auto;
+        }
+
         @keyframes balloonFloat {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
-            100% { transform: translateY(-120vh) rotate(var(--rot)); opacity: 0; }
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: translateY(-120vh) rotate(var(--rot));
+                opacity: 0;
+            }
         }
 
         /* SWIPE HINT */
         .swipe-hint {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            z-index: 170; font-family: 'Orbitron', sans-serif; font-size: 0.55rem;
-            color: rgba(0,191,255,0.6); letter-spacing: 2px; text-transform: uppercase;
-            text-align: center; pointer-events: none; opacity: 0; transition: opacity 1s ease; display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 170;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            color: rgba(0, 191, 255, 0.6);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+            display: none;
         }
-        .swipe-hint.visible { opacity: 1; }
-        .swipe-hint .arrow { display: block; font-size: 1.2rem; animation: swipeAnim 2s ease-in-out infinite; margin-bottom: 5px; }
-        @keyframes swipeAnim { 0%,100%{transform:translateX(-10px);opacity:0.4} 50%{transform:translateX(10px);opacity:1} }
+
+        .swipe-hint.visible {
+            opacity: 1;
+        }
+
+        .swipe-hint .arrow {
+            display: block;
+            font-size: 1.2rem;
+            animation: swipeAnim 2s ease-in-out infinite;
+            margin-bottom: 5px;
+        }
+
+        @keyframes swipeAnim {
+
+            0%,
+            100% {
+                transform: translateX(-10px);
+                opacity: 0.4
+            }
+
+            50% {
+                transform: translateX(10px);
+                opacity: 1
+            }
+        }
 
         /* RESPONSIVE */
         @media (max-width: 700px) {
-            .content { padding: 80px 14px 90px; }
-            .greeting .subtitle { letter-spacing: 4px; font-size: clamp(0.6rem, 2.5vw, 0.9rem); }
-            .greeting h1 { font-size: clamp(1.6rem, 7vw, 3rem); }
-            .greeting .name { font-size: clamp(2rem, 9vw, 4rem); margin: 3px 0 12px; }
-            .speedometer { width: 150px; height: 150px; margin: 10px auto; }
-            .speedo-value { font-size: 2.8rem; }
-            .speedo-label { font-size: 0.45rem; bottom: 28px; }
-            .speedo-mph { font-size: 0.6rem; bottom: 42px; }
-            .message { padding: 18px 16px; margin: 15px auto; }
-            .message p { font-size: 0.9rem; line-height: 1.7; }
-            .time-circuits { transform: translateX(-50%) scale(0.8); top: 5px; }
-            .actions { gap: 8px; }
-            .action-btn { padding: 12px 16px; font-size: 0.6rem; min-height: 44px; letter-spacing: 1px; }
-            .start-btn { padding: 18px 40px; font-size: 1.1rem; }
-            .swipe-hint { display: block; }
-            .flux-overlay .flux-box { width: 220px; height: 220px; }
-            .flux-overlay .flux-arm-big { height: 75px; }
-            .slideshow { width: 94vw; }
-            .slideshow-dot { width: 6px; height: 6px; }
-            .slideshow-dots { gap: 5px; }
-            .music-control { width: 46px; height: 46px; font-size: 1.1rem; bottom: 15px; left: 15px; }
-            .road { height: 25vh; }
+            .content {
+                padding: 80px 14px 90px;
+            }
+
+            .greeting .subtitle {
+                letter-spacing: 4px;
+                font-size: clamp(0.6rem, 2.5vw, 0.9rem);
+            }
+
+            .greeting h1 {
+                font-size: clamp(1.6rem, 7vw, 3rem);
+            }
+
+            .greeting .name {
+                font-size: clamp(2rem, 9vw, 4rem);
+                margin: 3px 0 12px;
+            }
+
+            .speedometer {
+                width: 150px;
+                height: 150px;
+                margin: 10px auto;
+            }
+
+            .speedo-value {
+                font-size: 2.8rem;
+            }
+
+            .speedo-label {
+                font-size: 0.45rem;
+                bottom: 28px;
+            }
+
+            .speedo-mph {
+                font-size: 0.6rem;
+                bottom: 42px;
+            }
+
+            .message {
+                padding: 18px 16px;
+                margin: 15px auto;
+            }
+
+            .message p {
+                font-size: 0.9rem;
+                line-height: 1.7;
+            }
+
+            .time-circuits {
+                transform: translateX(-50%) scale(0.8);
+                top: 5px;
+            }
+
+            .actions {
+                gap: 8px;
+            }
+
+            .action-btn {
+                padding: 12px 16px;
+                font-size: 0.6rem;
+                min-height: 44px;
+                letter-spacing: 1px;
+            }
+
+            .start-btn {
+                padding: 18px 40px;
+                font-size: 1.1rem;
+            }
+
+            .swipe-hint {
+                display: block;
+            }
+
+            .flux-overlay .flux-box {
+                width: 220px;
+                height: 220px;
+            }
+
+            .flux-overlay .flux-arm-big {
+                height: 75px;
+            }
+
+            .slideshow {
+                width: 94vw;
+            }
+
+            .slideshow-dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            .slideshow-dots {
+                gap: 5px;
+            }
+
+            .music-control {
+                width: 46px;
+                height: 46px;
+                font-size: 1.1rem;
+                bottom: 15px;
+                left: 15px;
+            }
+
+            .road {
+                height: 25vh;
+            }
         }
+
         @media (max-width: 380px) {
-            .content { padding: 75px 10px 90px; }
-            .greeting .subtitle { letter-spacing: 2px; }
-            .greeting h1 { font-size: 1.5rem; }
-            .greeting .name { font-size: 1.8rem; }
-            .speedometer { width: 130px; height: 130px; }
-            .speedo-value { font-size: 2.4rem; }
-            .message p { font-size: 0.85rem; line-height: 1.6; }
-            .action-btn { padding: 10px 12px; font-size: 0.55rem; }
-            .time-circuits { transform: translateX(-50%) scale(0.65); }
-            .slideshow { width: 96vw; }
+            .content {
+                padding: 75px 10px 90px;
+            }
+
+            .greeting .subtitle {
+                letter-spacing: 2px;
+            }
+
+            .greeting h1 {
+                font-size: 1.5rem;
+            }
+
+            .greeting .name {
+                font-size: 1.8rem;
+            }
+
+            .speedometer {
+                width: 130px;
+                height: 130px;
+            }
+
+            .speedo-value {
+                font-size: 2.4rem;
+            }
+
+            .message p {
+                font-size: 0.85rem;
+                line-height: 1.6;
+            }
+
+            .action-btn {
+                padding: 10px 12px;
+                font-size: 0.55rem;
+            }
+
+            .time-circuits {
+                transform: translateX(-50%) scale(0.65);
+            }
+
+            .slideshow {
+                width: 96vw;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<!-- Time Flash -->
-<div class="time-flash" id="timeFlash"></div>
+    <!-- Time Flash -->
+    <div class="time-flash" id="timeFlash"></div>
 
-<!-- Lightning -->
-<div class="lightning" id="lightning">
-    <svg width="100%" height="100%" viewBox="0 0 800 400" preserveAspectRatio="none">
-        <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#00bfff" stroke-width="4" opacity="0.9" filter="url(#glow)"/>
-        <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#fff" stroke-width="2" opacity="0.7"/>
-        <path d="M420,0 L440,100 L410,100 L460,220 L420,220 L490,400" fill="none" stroke="#00bfff" stroke-width="2" opacity="0.5" filter="url(#glow)"/>
-        <defs><filter id="glow"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-    </svg>
-</div>
+    <!-- Lightning -->
+    <div class="lightning" id="lightning">
+        <svg width="100%" height="100%" viewBox="0 0 800 400" preserveAspectRatio="none">
+            <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#00bfff" stroke-width="4"
+                opacity="0.9" filter="url(#glow)" />
+            <path d="M400,0 L380,120 L420,120 L350,250 L410,250 L300,400" fill="none" stroke="#fff" stroke-width="2"
+                opacity="0.7" />
+            <path d="M420,0 L440,100 L410,100 L460,220 L420,220 L490,400" fill="none" stroke="#00bfff" stroke-width="2"
+                opacity="0.5" filter="url(#glow)" />
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="8" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+        </svg>
+    </div>
 
-<!-- Starfield -->
-<div class="starfield" id="starfield"></div>
+    <!-- Starfield -->
+    <div class="starfield" id="starfield"></div>
 
-<!-- Road -->
-<div class="road"><div class="road-lines">
-    <div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div>
-    <div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div><div class="road-dash"></div>
-</div></div>
-
-<!-- Flux Capacitor Fullscreen Overlay -->
-<div class="flux-overlay" id="fluxOverlay">
-    <div class="flux-box">
-        <div class="flux-housing">
-            <div class="flux-label">Flux-Kompensator</div>
-            <div class="flux-wires">
-                <div class="wire" style="left:20%;top:40%;height:35px;transform:rotate(15deg)"></div>
-                <div class="wire" style="left:75%;top:35%;height:40px;transform:rotate(-10deg)"></div>
-                <div class="wire" style="left:15%;top:70%;height:25px;transform:rotate(5deg)"></div>
-                <div class="wire" style="left:80%;top:72%;height:30px;transform:rotate(-20deg)"></div>
-            </div>
-            <div class="flux-ring"></div>
-            <div class="flux-y">
-                <div class="flux-arm-big"></div>
-                <div class="flux-arm-big"></div>
-                <div class="flux-arm-big"></div>
-            </div>
-            <div class="flux-center-orb"></div>
-            <div class="flux-caption">Temporale Verschiebung</div>
-            <div class="flux-speed" id="fluxSpeed">88 MPH</div>
+    <!-- Road -->
+    <div class="road">
+        <div class="road-lines">
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
+            <div class="road-dash"></div>
         </div>
     </div>
-</div>
 
-<!-- Time Circuits Display -->
-<div class="time-circuits" id="timeCircuits">
-    <div class="time-row">
-        <span class="time-label red">Ziel-Zeit</span>
-        <span class="time-value red" id="destTime">--- -- ---- --:--</span>
-    </div>
-    <div class="time-row">
-        <span class="time-label green">Jetzt</span>
-        <span class="time-value green" id="presentTime">--- -- ---- --:--</span>
-    </div>
-    <div class="time-row">
-        <span class="time-label yellow">Abfahrt</span>
-        <span class="time-value yellow" id="departTime">--- -- ---- --:--</span>
-    </div>
-</div>
-
-<!-- Confetti -->
-<canvas id="confetti-canvas"></canvas>
-
-<!-- Start Screen -->
-<div class="start-screen" id="startScreen">
-    <div class="bttf-logo">Zurück in die<br>Zukunft</div>
-    <div class="bttf-sub">Berni Edition</div>
-    <div class="speed-display" id="speedDisplay">Zielgeschwindigkeit: <span>88</span> MPH</div>
-    <button class="start-btn" id="startBtn" onclick="startSequence()">Zeitreise starten</button>
-</div>
-
-<!-- Main Content -->
-<div class="content" id="mainContent">
-    <div class="greeting" id="greeting">
-        <div class="subtitle">Alles Gute zum Geburtstag</div>
-        <h1>Happy Birthday</h1>
-        <span class="name">Berni!</span>
-    </div>
-    <div class="speedometer" id="speedometer">
-        <div class="speedo-ring"></div>
-        <div class="speedo-value" id="speedoValue">53</div>
-        <div class="speedo-mph">JAHRE</div>
-    </div>
-    <div class="message" id="messageCard">
-        <p>
-            Lieber Papa, <span class="highlight">53 Jahre</span> &mdash;
-            und du legst immer noch keinen Rückwärtsgang ein.<br><br>
-            Egal ob am <span class="blue">Grill</span>, am Handy oder auf der Couch
-            beim Fußball &mdash; du gibst immer 110%.<br><br>
-            Und eines Tages steht er vor der Tür:
-            <em class="highlight">dein eigener DeLorean.</em>
-            Bis dahin musst du dich mit dieser Zeitreise hier begnügen.<br><br>
-            Wie Doc Brown sagen würde:<br>
-            <em class="highlight">"Wohin wir gehen, brauchen wir keine Straßen!"</em><br>
-            &mdash; aber ein Nummernschild mit OUTATIME wär schon nice.<br><br>
-            Alles Gute zum Geburtstag, Papa!<br><br>
-            Dein Pascal
-        </p>
-    </div>
-    <div class="slideshow-wrap" id="slideshowWrap">
-        <div class="slideshow" id="slideshow">
-            <img src="Bilder/5be76b26-064e-4c14-a8e0-4b8f70360ce9.JPG" class="active" alt="Berni">
-            <img src="Bilder/073fe171-9f34-4445-97ff-9618aaa32bf4.JPG" alt="Berni">
-            <img src="Bilder/e69a580c-740c-4d6a-bf54-875fec0aa1ae.JPG" alt="Berni">
-            <img src="Bilder/b5440b9b-df90-47be-86de-05ea3e8b804e.JPG" alt="Berni">
-            <img src="Bilder/aa937178-6260-4960-a8a9-c8af202655e9.JPG" alt="Berni">
-            <img src="Bilder/05c86bfe-ef27-49fd-9747-fb642bcbce21.JPG" alt="Berni">
-            <img src="Bilder/d1905966-5817-4866-b1ac-de71d173bcc0.JPG" alt="Berni">
-            <img src="Bilder/5b801114-116b-445c-8ebd-4e608dbdbffa.JPG" alt="Berni">
-            <img src="Bilder/8c890b22-a668-4c5a-9234-f89a65ca2bb5.JPG" alt="Berni">
-            <img src="Bilder/4c19bc67-2923-4ae3-908c-1cde9f59a8d0.JPG" alt="Berni">
-            <img src="Bilder/b66d1a86-ddf0-491c-8c3b-bd3666b42987.JPG" alt="Berni">
-            <img src="Bilder/413558f7-8d7c-4e09-a23a-b84f04d9168b.JPG" alt="Berni">
-            <img src="Bilder/b23f000b-7cb7-47d3-bdd3-902f18901204.JPG" alt="Berni">
-            <img src="Bilder/6a339906-36e0-4070-b9bc-8a6d5217dde4.JPG" alt="Berni">
-            <img src="Bilder/c707f479-82b2-4619-9e2c-b4de1d9cb9ca.JPG" alt="Berni">
-            <img src="Bilder/f5080668-ef41-4ad4-bd95-10ba7c69a1a6.JPG" alt="Berni">
-            <img src="Bilder/99a61460-8d66-4990-855b-ff0fa1e2b830.JPG" alt="Berni">
-            <img src="Bilder/a6fe1aaa-c212-4130-a196-e2be4082a5a7.JPG" alt="Berni">
-            <span class="slideshow-counter" id="slideshowCounter">1 / 18</span>
+    <!-- Flux Capacitor Fullscreen Overlay -->
+    <div class="flux-overlay" id="fluxOverlay">
+        <div class="flux-box">
+            <div class="flux-housing">
+                <div class="flux-label">Flux-Kompensator</div>
+                <div class="flux-wires">
+                    <div class="wire" style="left:20%;top:40%;height:35px;transform:rotate(15deg)"></div>
+                    <div class="wire" style="left:75%;top:35%;height:40px;transform:rotate(-10deg)"></div>
+                    <div class="wire" style="left:15%;top:70%;height:25px;transform:rotate(5deg)"></div>
+                    <div class="wire" style="left:80%;top:72%;height:30px;transform:rotate(-20deg)"></div>
+                </div>
+                <div class="flux-ring"></div>
+                <div class="flux-y">
+                    <div class="flux-arm-big"></div>
+                    <div class="flux-arm-big"></div>
+                    <div class="flux-arm-big"></div>
+                </div>
+                <div class="flux-center-orb"></div>
+                <div class="flux-caption">Temporale Verschiebung</div>
+                <div class="flux-speed" id="fluxSpeed">88 MPH</div>
+            </div>
         </div>
-        <div class="slideshow-dots" id="slideshowDots"></div>
     </div>
-    <div class="actions" id="actions">
-        <button class="action-btn gold-btn" onclick="launchConfetti()">🎉 Konfetti</button>
-        <button class="action-btn blue-btn" onclick="triggerTimeTravel()">⚡ Zeitreise</button>
-        <button class="action-btn red-btn" onclick="launchFireworks()">🎆 Feuerwerk</button>
-        <button class="action-btn gold-btn" onclick="releaseBalloons()">🎈 Luftballons</button>
+
+    <!-- Time Circuits Display -->
+    <div class="time-circuits" id="timeCircuits">
+        <div class="time-row">
+            <span class="time-label red">Ziel-Zeit</span>
+            <span class="time-value red" id="destTime">--- -- ---- --:--</span>
+        </div>
+        <div class="time-row">
+            <span class="time-label green">Jetzt</span>
+            <span class="time-value green" id="presentTime">--- -- ---- --:--</span>
+        </div>
+        <div class="time-row">
+            <span class="time-label yellow">Abfahrt</span>
+            <span class="time-value yellow" id="departTime">--- -- ---- --:--</span>
+        </div>
     </div>
-</div>
 
-<!-- Music -->
-<audio id="bgMusic" src="Zeitbandit.mp3" loop preload="auto"></audio>
-<div class="music-control" id="musicBtn" onclick="toggleMusic()">🎵</div>
+    <!-- Confetti -->
+    <canvas id="confetti-canvas"></canvas>
 
-<!-- Swipe Hint -->
-<div class="swipe-hint" id="swipeHint">
-    <span class="arrow">👆</span>
-    Wischen: ↑Konfetti ↓Ballons ←Zeitreise →Feuerwerk · Schütteln: Party!
-</div>
+    <!-- Start Screen -->
+    <div class="start-screen" id="startScreen">
+        <div class="bttf-logo">Zurück in die<br>Zukunft</div>
+        <div class="bttf-sub">Berni Edition</div>
+        <div class="speed-display" id="speedDisplay">Zielgeschwindigkeit: <span>88</span> MPH</div>
+        <button class="start-btn" id="startBtn" onclick="startSequence()">Zeitreise starten</button>
+    </div>
 
-<script>
-// ===== STARFIELD =====
-(function() {
-    const sf = document.getElementById('starfield');
-    for (let i = 0; i < 200; i++) {
-        const s = document.createElement('div');
-        s.className = 'star';
-        const size = Math.random() * 2.5 + 0.5;
-        s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${1+Math.random()*3}s;animation-delay:${Math.random()*3}s;`;
-        sf.appendChild(s);
-    }
-})();
+    <!-- Main Content -->
+    <div class="content" id="mainContent">
+        <div class="greeting" id="greeting">
+            <div class="subtitle">Alles Gute zum Geburtstag</div>
+            <h1>Happy Birthday</h1>
+            <span class="name">Berni!</span>
+        </div>
+        <div class="speedometer" id="speedometer">
+            <div class="speedo-ring"></div>
+            <div class="speedo-value" id="speedoValue">53</div>
+            <div class="speedo-mph">JAHRE</div>
+        </div>
+        <div class="message" id="messageCard">
+            <p>
+                Lieber Papa, <span class="highlight">53 Jahre</span> &mdash;
+                und du legst immer noch keinen Rückwärtsgang ein.<br><br>
+                Egal ob am <span class="blue">Grill</span>, am Handy oder auf der Couch
+                beim Fußball<br><br>
+                Und eines Tages steht er vor der Tür:
+                <em class="highlight">dein eigener DeLorean.</em>
+                Bis dahin musst du dich mit dieser Zeitreise hier begnügen.<br><br>
+                Wie Doc Brown sagen würde:<br>
+                <em class="highlight">"Wohin wir gehen, brauchen wir keine Straßen!"</em><br>
+                Alles Gute zum Geburtstag, Papa!<br><br>
+                Dein Pascal
+            </p>
+        </div>
+        <div class="slideshow-wrap" id="slideshowWrap">
+            <div class="slideshow" id="slideshow">
+                <img src="Bilder/5be76b26-064e-4c14-a8e0-4b8f70360ce9.JPG" class="active" alt="Berni">
+                <img src="Bilder/073fe171-9f34-4445-97ff-9618aaa32bf4.JPG" alt="Berni">
+                <img src="Bilder/e69a580c-740c-4d6a-bf54-875fec0aa1ae.JPG" alt="Berni">
+                <img src="Bilder/b5440b9b-df90-47be-86de-05ea3e8b804e.JPG" alt="Berni">
+                <img src="Bilder/aa937178-6260-4960-a8a9-c8af202655e9.JPG" alt="Berni">
+                <img src="Bilder/05c86bfe-ef27-49fd-9747-fb642bcbce21.JPG" alt="Berni">
+                <img src="Bilder/d1905966-5817-4866-b1ac-de71d173bcc0.JPG" alt="Berni">
+                <img src="Bilder/5b801114-116b-445c-8ebd-4e608dbdbffa.JPG" alt="Berni">
+                <img src="Bilder/8c890b22-a668-4c5a-9234-f89a65ca2bb5.JPG" alt="Berni">
+                <img src="Bilder/4c19bc67-2923-4ae3-908c-1cde9f59a8d0.JPG" alt="Berni">
+                <img src="Bilder/b66d1a86-ddf0-491c-8c3b-bd3666b42987.JPG" alt="Berni">
+                <img src="Bilder/413558f7-8d7c-4e09-a23a-b84f04d9168b.JPG" alt="Berni">
+                <img src="Bilder/b23f000b-7cb7-47d3-bdd3-902f18901204.JPG" alt="Berni">
+                <img src="Bilder/6a339906-36e0-4070-b9bc-8a6d5217dde4.JPG" alt="Berni">
+                <img src="Bilder/c707f479-82b2-4619-9e2c-b4de1d9cb9ca.JPG" alt="Berni">
+                <img src="Bilder/f5080668-ef41-4ad4-bd95-10ba7c69a1a6.JPG" alt="Berni">
+                <img src="Bilder/99a61460-8d66-4990-855b-ff0fa1e2b830.JPG" alt="Berni">
+                <img src="Bilder/a6fe1aaa-c212-4130-a196-e2be4082a5a7.JPG" alt="Berni">
+                <span class="slideshow-counter" id="slideshowCounter">1 / 18</span>
+            </div>
+            <div class="slideshow-dots" id="slideshowDots"></div>
+        </div>
+        <div class="actions" id="actions">
+            <button class="action-btn gold-btn" onclick="launchConfetti()">🎉 Konfetti</button>
+            <button class="action-btn blue-btn" onclick="triggerTimeTravel()">⚡ Zeitreise</button>
+            <button class="action-btn red-btn" onclick="launchFireworks()">🎆 Feuerwerk</button>
+            <button class="action-btn gold-btn" onclick="releaseBalloons()">🎈 Luftballons</button>
+        </div>
+    </div>
 
-// ===== AUDIO ENGINE =====
-let audioCtx = null, musicPlaying = false, musicTimeout = null, masterGain = null;
+    <!-- Music -->
+    <audio id="bgMusic" src="Zeitbandit.mp3" loop preload="auto"></audio>
+    <div class="music-control" id="musicBtn" onclick="toggleMusic()">🎵</div>
 
-function initAudio() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.5;
-    masterGain.connect(audioCtx.destination);
-}
+    <!-- Swipe Hint -->
+    <div class="swipe-hint" id="swipeHint">
+        <span class="arrow">👆</span>
+        Wischen: ↑Konfetti ↓Ballons ←Zeitreise →Feuerwerk · Schütteln: Party!
+    </div>
 
-function playNote(freq, start, dur, type='triangle', vol=0.1, pan=0) {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    const p = audioCtx.createStereoPanner();
-    osc.type = type; osc.frequency.setValueAtTime(freq, start); p.pan.value = pan;
-    g.gain.setValueAtTime(0, start);
-    g.gain.linearRampToValueAtTime(vol, start + 0.04);
-    g.gain.setValueAtTime(vol, start + dur * 0.7);
-    g.gain.exponentialRampToValueAtTime(0.001, start + dur);
-    osc.connect(g); g.connect(p); p.connect(masterGain);
-    osc.start(start); osc.stop(start + dur);
-}
+    <script>
+        // ===== STARFIELD =====
+        (function () {
+            const sf = document.getElementById('starfield');
+            for (let i = 0; i < 200; i++) {
+                const s = document.createElement('div');
+                s.className = 'star';
+                const size = Math.random() * 2.5 + 0.5;
+                s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;--dur:${1 + Math.random() * 3}s;animation-delay:${Math.random() * 3}s;`;
+                sf.appendChild(s);
+            }
+        })();
 
-function playDrum(start, type='kick') {
-    if (!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    if (type === 'kick') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(150, start);
-        osc.frequency.exponentialRampToValueAtTime(30, start + 0.15);
-        g.gain.setValueAtTime(0.25, start);
-        g.gain.exponentialRampToValueAtTime(0.001, start + 0.2);
-        osc.connect(g); g.connect(masterGain);
-        osc.start(start); osc.stop(start + 0.2);
-    } else if (type === 'hat') {
-        const bufSz = audioCtx.sampleRate * 0.05;
-        const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
-        const n = audioCtx.createBufferSource(); n.buffer = buf;
-        const hpf = audioCtx.createBiquadFilter(); hpf.type = 'highpass'; hpf.frequency.value = 8000;
-        g.gain.setValueAtTime(0.06, start);
-        g.gain.exponentialRampToValueAtTime(0.001, start + 0.05);
-        n.connect(hpf); hpf.connect(g); g.connect(masterGain);
-        n.start(start); n.stop(start + 0.06);
-    } else if (type === 'snare') {
-        const o2 = audioCtx.createOscillator();
-        const g2 = audioCtx.createGain();
-        o2.type = 'triangle';
-        o2.frequency.setValueAtTime(200, start);
-        o2.frequency.exponentialRampToValueAtTime(50, start + 0.1);
-        g2.gain.setValueAtTime(0.12, start);
-        g2.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
-        o2.connect(g2); g2.connect(masterGain);
-        o2.start(start); o2.stop(start + 0.15);
-        const bufSz = audioCtx.sampleRate * 0.08;
-        const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
-        const n = audioCtx.createBufferSource(); n.buffer = buf;
-        g.gain.setValueAtTime(0.1, start);
-        g.gain.exponentialRampToValueAtTime(0.001, start + 0.1);
-        n.connect(g); g.connect(masterGain);
-        n.start(start); n.stop(start + 0.12);
-    }
-}
+        // ===== AUDIO ENGINE =====
+        let audioCtx = null, musicPlaying = false, musicTimeout = null, masterGain = null;
 
-function playChord(freqs, start, dur, vol=0.04, type='triangle') {
-    freqs.forEach((f, i) => playNote(f, start, dur, type, vol, (i-1)*0.3));
-}
-
-function playSynthBass(freq, start, dur) {
-    playNote(freq, start, dur, 'sawtooth', 0.06);
-    playNote(freq * 0.5, start, dur, 'sine', 0.04);
-}
-
-// ===== MP3 MUSIC =====
-const bgMusic = document.getElementById('bgMusic');
-
-function startMusic() {
-    musicPlaying = true;
-    document.getElementById('musicBtn').classList.add('playing');
-    bgMusic.currentTime = 0;
-    bgMusic.play().catch(() => {});
-}
-
-function stopMusic() {
-    musicPlaying = false;
-    document.getElementById('musicBtn').classList.remove('playing');
-    bgMusic.pause();
-}
-
-function toggleMusic() { musicPlaying ? stopMusic() : startMusic(); }
-
-// ===== SFX =====
-function playSFX(type) {
-    if (!audioCtx) initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const now = audioCtx.currentTime;
-    if (type === 'whoosh') {
-        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.type = 'sawtooth';
-        o.frequency.setValueAtTime(80, now);
-        o.frequency.exponentialRampToValueAtTime(2000, now + 0.3);
-        o.frequency.exponentialRampToValueAtTime(100, now + 0.8);
-        g.gain.setValueAtTime(0.15, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-        o.connect(g); g.connect(masterGain);
-        o.start(now); o.stop(now + 0.8);
-    } else if (type === 'zap') {
-        for (let i = 0; i < 4; i++) {
-            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            o.type = 'square';
-            o.frequency.setValueAtTime(4000 - i * 700, now + i * 0.04);
-            o.frequency.exponentialRampToValueAtTime(150, now + 0.35 + i * 0.04);
-            g.gain.setValueAtTime(0.06, now + i * 0.04);
-            g.gain.exponentialRampToValueAtTime(0.001, now + 0.35 + i * 0.04);
-            o.connect(g); g.connect(masterGain);
-            o.start(now + i * 0.04); o.stop(now + 0.4 + i * 0.04);
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = audioCtx.createGain();
+            masterGain.gain.value = 0.5;
+            masterGain.connect(audioCtx.destination);
         }
-    } else if (type === 'pop') {
-        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(600, now);
-        o.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-        g.gain.setValueAtTime(0.2, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-        o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.2);
-    } else if (type === 'boom') {
-        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-        o.type = 'sine';
-        o.frequency.setValueAtTime(100, now);
-        o.frequency.exponentialRampToValueAtTime(20, now + 0.6);
-        g.gain.setValueAtTime(0.25, now);
-        g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-        o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.7);
-        const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.exp(-i / (d.length*0.2));
-        const n = audioCtx.createBufferSource(); n.buffer = buf;
-        const g2 = audioCtx.createGain();
-        g2.gain.setValueAtTime(0.1, now);
-        g2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-        n.connect(g2); g2.connect(masterGain); n.start(now + 0.05); n.stop(now + 0.4);
-    } else if (type === 'flux') {
-        // Flux capacitor charging sound
-        for (let i = 0; i < 6; i++) {
-            const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
-            o.type = 'sine';
-            const baseF = 300 + i * 200;
-            o.frequency.setValueAtTime(baseF, now + i * 0.15);
-            o.frequency.exponentialRampToValueAtTime(baseF * 3, now + i * 0.15 + 0.3);
-            g.gain.setValueAtTime(0.04, now + i * 0.15);
-            g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
-            o.connect(g); g.connect(masterGain);
-            o.start(now + i * 0.15); o.stop(now + i * 0.15 + 0.5);
+
+        function playNote(freq, start, dur, type = 'triangle', vol = 0.1, pan = 0) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            const p = audioCtx.createStereoPanner();
+            osc.type = type; osc.frequency.setValueAtTime(freq, start); p.pan.value = pan;
+            g.gain.setValueAtTime(0, start);
+            g.gain.linearRampToValueAtTime(vol, start + 0.04);
+            g.gain.setValueAtTime(vol, start + dur * 0.7);
+            g.gain.exponentialRampToValueAtTime(0.001, start + dur);
+            osc.connect(g); g.connect(p); p.connect(masterGain);
+            osc.start(start); osc.stop(start + dur);
         }
-    }
-}
 
-// ===== CONFETTI =====
-const canvas = document.getElementById('confetti-canvas');
-const ctx = canvas.getContext('2d');
-let confettiPieces = [];
-function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
-addEventListener('resize', resizeCanvas); resizeCanvas();
-const confettiColors = ['#ff006e','#ffd700','#00bfff','#ff4500','#00f5d4','#9b5de5','#ff8c00','#44ff44'];
-
-class Confetti {
-    constructor() { this.reset(true); }
-    reset(init) {
-        this.x = Math.random() * canvas.width;
-        this.y = init ? Math.random() * -canvas.height : -10;
-        this.size = 4 + Math.random() * 6;
-        this.color = confettiColors[~~(Math.random()*confettiColors.length)];
-        this.vy = 1.5 + Math.random() * 3;
-        this.vx = Math.random() * 2 - 1;
-        this.rot = Math.random() * 360;
-        this.rv = (Math.random()-0.5) * 10;
-        this.wobble = Math.random() * 10;
-        this.life = 1;
-    }
-    update(keepAlive) {
-        this.y += this.vy;
-        this.x += this.vx + Math.sin(this.wobble += 0.03) * 0.5;
-        this.rot += this.rv;
-        if (this.y > canvas.height + 20) { if (keepAlive) this.reset(false); else this.life -= 0.05; }
-    }
-    draw() {
-        if (this.life <= 0) return;
-        ctx.save(); ctx.globalAlpha = this.life;
-        ctx.translate(this.x, this.y); ctx.rotate(this.rot * Math.PI / 180);
-        ctx.fillStyle = this.color;
-        ctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
-        ctx.restore();
-    }
-}
-let confettiAlive = false, confettiKeepAlive = false;
-function animateConfetti() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    confettiPieces = confettiPieces.filter(c => c.life > 0);
-    confettiPieces.forEach(c => { c.update(confettiKeepAlive); c.draw(); });
-    if (confettiPieces.length > 0) requestAnimationFrame(animateConfetti);
-    else confettiAlive = false;
-}
-function launchConfetti() {
-    playSFX('pop');
-    for (let i = 0; i < 180; i++) confettiPieces.push(new Confetti());
-    confettiKeepAlive = true;
-    if (!confettiAlive) { confettiAlive = true; animateConfetti(); }
-    setTimeout(() => { confettiKeepAlive = false; }, 5000);
-}
-
-// ===== BALLOONS =====
-const balloonDefs = [
-    {color:'#ff006e', light:'#ff5aa0'}, {color:'#ffd700', light:'#ffe866'},
-    {color:'#00bfff', light:'#66d9ff'}, {color:'#ff4500', light:'#ff7744'},
-    {color:'#9b5de5', light:'#bb88ff'}, {color:'#00f5d4', light:'#66ffea'},
-];
-function createBalloon() {
-    const b = document.createElement('div'); b.className = 'balloon';
-    const def = balloonDefs[~~(Math.random()*balloonDefs.length)];
-    const size = 45 + Math.random() * 25;
-    const dur = 7 + Math.random() * 5;
-    b.style.cssText = `left:${Math.random()*92}%;--size:${size}px;--color:${def.color};--color-light:${def.light};--rot:${(Math.random()-0.5)*30}deg;animation-duration:${dur}s;`;
-    b.innerHTML = `<div class="balloon-body"></div><div class="balloon-string"></div>`;
-    document.body.appendChild(b);
-    setTimeout(() => b.remove(), dur * 1000);
-}
-function releaseBalloons() {
-    playSFX('pop');
-    for (let i = 0; i < 15; i++) setTimeout(createBalloon, i * 150);
-}
-
-// ===== FIREWORKS =====
-function createFirework(x, y) {
-    const colors = ['#ff006e','#ffd700','#00bfff','#ff4500','#00f5d4','#9b5de5'];
-    const color = colors[~~(Math.random()*colors.length)];
-    const count = 25 + ~~(Math.random()*15);
-    for (let i = 0; i < count; i++) {
-        const angle = (i / count) * Math.PI * 2;
-        const dist = 60 + Math.random() * 80;
-        const p = document.createElement('div');
-        p.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:${color};z-index:155;pointer-events:none;box-shadow:0 0 6px ${color};`;
-        document.body.appendChild(p);
-        p.animate([
-            { transform: 'translate(0,0) scale(1)', opacity: 1 },
-            { transform: `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px) scale(0.1)`, opacity: 0 }
-        ], { duration: 800 + Math.random() * 400, easing: 'cubic-bezier(0,.5,.5,1)', fill: 'forwards' });
-        setTimeout(() => p.remove(), 1500);
-    }
-}
-function launchFireworks() {
-    playSFX('boom');
-    for (let i = 0; i < 6; i++) {
-        setTimeout(() => {
-            createFirework(innerWidth*0.15+Math.random()*innerWidth*0.7, innerHeight*0.1+Math.random()*innerHeight*0.4);
-            if (i > 0) playSFX('boom');
-        }, i * 350);
-    }
-}
-
-// ===== TIME TRAVEL EFFECT (with fullscreen flux capacitor) =====
-let timeTravelActive = false;
-function triggerTimeTravel() {
-    if (timeTravelActive) return;
-    timeTravelActive = true;
-
-    const flash = document.getElementById('timeFlash');
-    const lightning = document.getElementById('lightning');
-    const fluxOv = document.getElementById('fluxOverlay');
-
-    // Phase 1: Flux capacitor takes over the screen
-    playSFX('flux');
-    fluxOv.classList.add('active');
-
-    // Animate speed counter on flux overlay
-    const speedEl = document.getElementById('fluxSpeed');
-    let mph = 0;
-    const spdInterval = setInterval(() => {
-        mph += 3;
-        if (mph > 88) mph = 88;
-        speedEl.textContent = mph + ' MPH';
-        if (mph >= 88) {
-            clearInterval(spdInterval);
-            speedEl.style.color = '#ffd700';
-            speedEl.style.textShadow = '0 0 20px #ffd700, 0 0 40px #ff8c00';
+        function playDrum(start, type = 'kick') {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            if (type === 'kick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(150, start);
+                osc.frequency.exponentialRampToValueAtTime(30, start + 0.15);
+                g.gain.setValueAtTime(0.25, start);
+                g.gain.exponentialRampToValueAtTime(0.001, start + 0.2);
+                osc.connect(g); g.connect(masterGain);
+                osc.start(start); osc.stop(start + 0.2);
+            } else if (type === 'hat') {
+                const bufSz = audioCtx.sampleRate * 0.05;
+                const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
+                const d = buf.getChannelData(0);
+                for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
+                const n = audioCtx.createBufferSource(); n.buffer = buf;
+                const hpf = audioCtx.createBiquadFilter(); hpf.type = 'highpass'; hpf.frequency.value = 8000;
+                g.gain.setValueAtTime(0.06, start);
+                g.gain.exponentialRampToValueAtTime(0.001, start + 0.05);
+                n.connect(hpf); hpf.connect(g); g.connect(masterGain);
+                n.start(start); n.stop(start + 0.06);
+            } else if (type === 'snare') {
+                const o2 = audioCtx.createOscillator();
+                const g2 = audioCtx.createGain();
+                o2.type = 'triangle';
+                o2.frequency.setValueAtTime(200, start);
+                o2.frequency.exponentialRampToValueAtTime(50, start + 0.1);
+                g2.gain.setValueAtTime(0.12, start);
+                g2.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
+                o2.connect(g2); g2.connect(masterGain);
+                o2.start(start); o2.stop(start + 0.15);
+                const bufSz = audioCtx.sampleRate * 0.08;
+                const buf = audioCtx.createBuffer(1, bufSz, audioCtx.sampleRate);
+                const d = buf.getChannelData(0);
+                for (let i = 0; i < bufSz; i++) d[i] = Math.random() * 2 - 1;
+                const n = audioCtx.createBufferSource(); n.buffer = buf;
+                g.gain.setValueAtTime(0.1, start);
+                g.gain.exponentialRampToValueAtTime(0.001, start + 0.1);
+                n.connect(g); g.connect(masterGain);
+                n.start(start); n.stop(start + 0.12);
+            }
         }
-    }, 40);
 
-    // Phase 2: At 88 mph - lightning + flash
-    setTimeout(() => {
-        playSFX('zap');
-        lightning.classList.add('flash');
-    }, 1200);
-
-    setTimeout(() => { lightning.classList.remove('flash'); }, 1600);
-
-    // Phase 3: Bright blue flash, flux overlay fades
-    setTimeout(() => {
-        flash.className = 'time-flash blue';
-        playSFX('whoosh');
-        fluxOv.classList.remove('active');
-    }, 1700);
-
-    setTimeout(() => {
-        flash.className = 'time-flash white';
-    }, 2000);
-
-    setTimeout(() => {
-        flash.className = 'time-flash';
-    }, 2300);
-
-    // Reset
-    setTimeout(() => {
-        speedEl.textContent = '88 MPH';
-        speedEl.style.color = '#ff4444';
-        speedEl.style.textShadow = '0 0 10px #ff4444';
-        timeTravelActive = false;
-    }, 3800);
-
-    randomizeTimeCircuits();
-}
-
-function randomizeTimeCircuits() {
-    const months = ['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
-    function randDate() {
-        const m = months[~~(Math.random()*12)];
-        const d = (~~(Math.random()*28)+1).toString().padStart(2,'0');
-        const y = (1950 + ~~(Math.random()*100)).toString();
-        const h = (~~(Math.random()*24)).toString().padStart(2,'0');
-        const min = (~~(Math.random()*60)).toString().padStart(2,'0');
-        return `${m} ${d} ${y} ${h}:${min}`;
-    }
-    document.getElementById('destTime').textContent = randDate();
-    document.getElementById('departTime').textContent = randDate();
-}
-
-function updatePresentTime() {
-    const now = new Date();
-    const months = ['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'];
-    const m = months[now.getMonth()];
-    const d = now.getDate().toString().padStart(2, '0');
-    const y = now.getFullYear();
-    const h = now.getHours().toString().padStart(2, '0');
-    const min = now.getMinutes().toString().padStart(2, '0');
-    document.getElementById('presentTime').textContent = `${m} ${d} ${y} ${h}:${min}`;
-}
-
-// ===== START SEQUENCE =====
-let started = false;
-function startSequence() {
-    if (started) return;
-    started = true;
-    if (!audioCtx) initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const btn = document.getElementById('startBtn');
-    const speedDisp = document.getElementById('speedDisplay');
-    btn.style.pointerEvents = 'none';
-
-    speedDisp.classList.add('visible');
-    let speed = 0;
-    const speedInterval = setInterval(() => {
-        speed += 2;
-        if (speed > 88) speed = 88;
-        speedDisp.querySelector('span').textContent = speed;
-        if (speed >= 88) clearInterval(speedInterval);
-    }, 40);
-
-    playSFX('whoosh');
-
-    setTimeout(() => {
-        playSFX('zap');
-        document.getElementById('lightning').classList.add('flash');
-        setTimeout(() => document.getElementById('lightning').classList.remove('flash'), 400);
-    }, 1600);
-
-    setTimeout(() => {
-        document.getElementById('timeFlash').className = 'time-flash white';
-    }, 1900);
-
-    setTimeout(() => {
-        document.getElementById('timeFlash').className = 'time-flash';
-        document.getElementById('startScreen').classList.add('hidden');
-
-        document.getElementById('mainContent').style.display = 'flex';
-        document.getElementById('timeCircuits').style.display = 'flex';
-        document.getElementById('musicBtn').style.display = 'flex';
-
-        // Set time circuits
-        document.getElementById('destTime').textContent = 'MÄR 29 2026 00:00';
-        document.getElementById('departTime').textContent = 'MÄR 31 1973 00:00';
-        updatePresentTime();
-        setInterval(updatePresentTime, 10000);
-
-        // Start music
-        startMusic();
-
-        // Animate elements in sequence
-        setTimeout(() => { document.getElementById('greeting').classList.add('visible'); }, 500);
-        setTimeout(() => {
-            document.getElementById('speedometer').classList.add('visible');
-            animateSpeedoCounter();
-        }, 1200);
-        setTimeout(() => { document.getElementById('messageCard').classList.add('visible'); }, 2000);
-        setTimeout(() => { document.getElementById('slideshowWrap').classList.add('visible'); }, 2800);
-        setTimeout(() => { document.getElementById('actions').classList.add('visible'); }, 3400);
-
-        setTimeout(launchConfetti, 1500);
-        enableShake();
-        showSwipeHint();
-    }, 2100);
-}
-
-function animateSpeedoCounter() {
-    const el = document.getElementById('speedoValue');
-    let val = 0;
-    const interval = setInterval(() => {
-        val += 1; el.textContent = val;
-        if (val >= 53) clearInterval(interval);
-    }, 30);
-}
-
-// ===== SLIDESHOW =====
-(function() {
-    const imgs = document.querySelectorAll('#slideshow img');
-    const counter = document.getElementById('slideshowCounter');
-    const dotsContainer = document.getElementById('slideshowDots');
-    const total = imgs.length;
-    let current = 0;
-    let timer;
-
-    // Create dots
-    for (let i = 0; i < total; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'slideshow-dot' + (i === 0 ? ' active' : '');
-        dot.addEventListener('click', () => goTo(i));
-        dotsContainer.appendChild(dot);
-    }
-    const dots = dotsContainer.querySelectorAll('.slideshow-dot');
-
-    function goTo(index) {
-        imgs[current].classList.remove('active');
-        dots[current].classList.remove('active');
-        current = index;
-        imgs[current].classList.add('active');
-        dots[current].classList.add('active');
-        counter.textContent = (current + 1) + ' / ' + total;
-        resetTimer();
-    }
-
-    function next() { goTo((current + 1) % total); }
-
-    function resetTimer() {
-        clearInterval(timer);
-        timer = setInterval(next, 3500);
-    }
-
-    // Swipe support for slideshow
-    let sx = 0;
-    const el = document.getElementById('slideshow');
-    el.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
-    el.addEventListener('touchend', (e) => {
-        const dx = e.changedTouches[0].clientX - sx;
-        if (Math.abs(dx) > 40) {
-            dx < 0 ? goTo((current + 1) % total) : goTo((current - 1 + total) % total);
+        function playChord(freqs, start, dur, vol = 0.04, type = 'triangle') {
+            freqs.forEach((f, i) => playNote(f, start, dur, type, vol, (i - 1) * 0.3));
         }
-    }, { passive: true });
 
-    resetTimer();
-})();
+        function playSynthBass(freq, start, dur) {
+            playNote(freq, start, dur, 'sawtooth', 0.06);
+            playNote(freq * 0.5, start, dur, 'sine', 0.04);
+        }
 
-// ===== SPARKLE =====
-function createSparkle(x, y) {
-    for (let i = 0; i < 8; i++) {
-        const spark = document.createElement('div');
-        const angle = (i / 8) * Math.PI * 2;
-        const dist = 30 + Math.random() * 20;
-        spark.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:#ffd700;z-index:200;pointer-events:none;box-shadow:0 0 8px #ffd700;`;
-        document.body.appendChild(spark);
-        spark.animate([
-            { transform: 'translate(0,0) scale(1)', opacity: 1 },
-            { transform: `translate(${Math.cos(angle)*dist}px,${Math.sin(angle)*dist}px) scale(0)`, opacity: 0 }
-        ], { duration: 500, fill: 'forwards' });
-        setTimeout(() => spark.remove(), 600);
-    }
-}
+        // ===== MP3 MUSIC =====
+        const bgMusic = document.getElementById('bgMusic');
 
-function isInteractive(el) {
-    return el.closest('.start-screen') || el.closest('button') || el.closest('.music-control');
-}
+        function startMusic() {
+            musicPlaying = true;
+            document.getElementById('musicBtn').classList.add('playing');
+            bgMusic.currentTime = 0;
+            bgMusic.play().catch(() => { });
+        }
 
-document.addEventListener('click', (e) => { if (!isInteractive(e.target)) createSparkle(e.clientX, e.clientY); });
+        function stopMusic() {
+            musicPlaying = false;
+            document.getElementById('musicBtn').classList.remove('playing');
+            bgMusic.pause();
+        }
 
-let touchMoved = false;
-document.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
-document.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
-document.addEventListener('touchend', (e) => {
-    if (touchMoved || !started || isInteractive(e.target)) return;
-    const t = e.changedTouches[0];
-    if (t) createSparkle(t.clientX, t.clientY);
-}, { passive: true });
+        function toggleMusic() { musicPlaying ? stopMusic() : startMusic(); }
 
-// ===== SWIPE GESTURES =====
-let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
-document.addEventListener('touchstart', (e) => {
-    if (!started) return;
-    const t = e.touches[0];
-    swipeStartX = t.clientX; swipeStartY = t.clientY; swipeStartTime = Date.now();
-}, { passive: true });
-document.addEventListener('touchend', (e) => {
-    if (!started || isInteractive(e.target)) return;
-    const t = e.changedTouches[0]; if (!t) return;
-    const dx = t.clientX - swipeStartX, dy = t.clientY - swipeStartY;
-    if (Date.now() - swipeStartTime > 400) return;
-    const ax = Math.abs(dx), ay = Math.abs(dy);
-    if (ax < 50 && ay < 50) return;
-    if (ay > ax) { dy < 0 ? launchConfetti() : releaseBalloons(); }
-    else { dx < 0 ? triggerTimeTravel() : launchFireworks(); }
-}, { passive: true });
+        // ===== SFX =====
+        function playSFX(type) {
+            if (!audioCtx) initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            if (type === 'whoosh') {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.type = 'sawtooth';
+                o.frequency.setValueAtTime(80, now);
+                o.frequency.exponentialRampToValueAtTime(2000, now + 0.3);
+                o.frequency.exponentialRampToValueAtTime(100, now + 0.8);
+                g.gain.setValueAtTime(0.15, now);
+                g.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+                o.connect(g); g.connect(masterGain);
+                o.start(now); o.stop(now + 0.8);
+            } else if (type === 'zap') {
+                for (let i = 0; i < 4; i++) {
+                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                    o.type = 'square';
+                    o.frequency.setValueAtTime(4000 - i * 700, now + i * 0.04);
+                    o.frequency.exponentialRampToValueAtTime(150, now + 0.35 + i * 0.04);
+                    g.gain.setValueAtTime(0.06, now + i * 0.04);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + 0.35 + i * 0.04);
+                    o.connect(g); g.connect(masterGain);
+                    o.start(now + i * 0.04); o.stop(now + 0.4 + i * 0.04);
+                }
+            } else if (type === 'pop') {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(600, now);
+                o.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+                g.gain.setValueAtTime(0.2, now);
+                g.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.2);
+            } else if (type === 'boom') {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(100, now);
+                o.frequency.exponentialRampToValueAtTime(20, now + 0.6);
+                g.gain.setValueAtTime(0.25, now);
+                g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                o.connect(g); g.connect(masterGain); o.start(now); o.stop(now + 0.7);
+                const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.3, audioCtx.sampleRate);
+                const d = buf.getChannelData(0);
+                for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.2));
+                const n = audioCtx.createBufferSource(); n.buffer = buf;
+                const g2 = audioCtx.createGain();
+                g2.gain.setValueAtTime(0.1, now);
+                g2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                n.connect(g2); g2.connect(masterGain); n.start(now + 0.05); n.stop(now + 0.4);
+            } else if (type === 'flux') {
+                // Flux capacitor charging sound
+                for (let i = 0; i < 6; i++) {
+                    const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                    o.type = 'sine';
+                    const baseF = 300 + i * 200;
+                    o.frequency.setValueAtTime(baseF, now + i * 0.15);
+                    o.frequency.exponentialRampToValueAtTime(baseF * 3, now + i * 0.15 + 0.3);
+                    g.gain.setValueAtTime(0.04, now + i * 0.15);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+                    o.connect(g); g.connect(masterGain);
+                    o.start(now + i * 0.15); o.stop(now + i * 0.15 + 0.5);
+                }
+            }
+        }
 
-// ===== SHAKE =====
-let lastShakeTime = 0, lastAccel = { x:0, y:0, z:0 };
-function handleMotion(e) {
-    if (!started) return;
-    const a = e.accelerationIncludingGravity; if (!a || a.x == null) return;
-    const d = Math.abs(a.x-lastAccel.x) + Math.abs(a.y-lastAccel.y) + Math.abs(a.z-lastAccel.z);
-    lastAccel = { x:a.x, y:a.y, z:a.z };
-    if (d > 20 && Date.now() - lastShakeTime > 1500) {
-        lastShakeTime = Date.now();
-        launchConfetti();
-        setTimeout(launchFireworks, 300);
-        setTimeout(releaseBalloons, 600);
-    }
-}
-function enableShake() {
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        DeviceMotionEvent.requestPermission().then(r => {
-            if (r === 'granted') window.addEventListener('devicemotion', handleMotion, { passive: true });
-        }).catch(() => {});
-    } else if (typeof DeviceMotionEvent !== 'undefined') {
-        window.addEventListener('devicemotion', handleMotion, { passive: true });
-    }
-}
+        // ===== CONFETTI =====
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiPieces = [];
+        function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+        addEventListener('resize', resizeCanvas); resizeCanvas();
+        const confettiColors = ['#ff006e', '#ffd700', '#00bfff', '#ff4500', '#00f5d4', '#9b5de5', '#ff8c00', '#44ff44'];
 
-function showSwipeHint() {
-    const h = document.getElementById('swipeHint'); if (!h) return;
-    setTimeout(() => h.classList.add('visible'), 4500);
-    setTimeout(() => h.classList.remove('visible'), 12000);
-}
+        class Confetti {
+            constructor() { this.reset(true); }
+            reset(init) {
+                this.x = Math.random() * canvas.width;
+                this.y = init ? Math.random() * -canvas.height : -10;
+                this.size = 4 + Math.random() * 6;
+                this.color = confettiColors[~~(Math.random() * confettiColors.length)];
+                this.vy = 1.5 + Math.random() * 3;
+                this.vx = Math.random() * 2 - 1;
+                this.rot = Math.random() * 360;
+                this.rv = (Math.random() - 0.5) * 10;
+                this.wobble = Math.random() * 10;
+                this.life = 1;
+            }
+            update(keepAlive) {
+                this.y += this.vy;
+                this.x += this.vx + Math.sin(this.wobble += 0.03) * 0.5;
+                this.rot += this.rv;
+                if (this.y > canvas.height + 20) { if (keepAlive) this.reset(false); else this.life -= 0.05; }
+            }
+            draw() {
+                if (this.life <= 0) return;
+                ctx.save(); ctx.globalAlpha = this.life;
+                ctx.translate(this.x, this.y); ctx.rotate(this.rot * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.size / 2, -this.size / 4, this.size, this.size / 2);
+                ctx.restore();
+            }
+        }
+        let confettiAlive = false, confettiKeepAlive = false;
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiPieces = confettiPieces.filter(c => c.life > 0);
+            confettiPieces.forEach(c => { c.update(confettiKeepAlive); c.draw(); });
+            if (confettiPieces.length > 0) requestAnimationFrame(animateConfetti);
+            else confettiAlive = false;
+        }
+        function launchConfetti() {
+            playSFX('pop');
+            for (let i = 0; i < 180; i++) confettiPieces.push(new Confetti());
+            confettiKeepAlive = true;
+            if (!confettiAlive) { confettiAlive = true; animateConfetti(); }
+            setTimeout(() => { confettiKeepAlive = false; }, 5000);
+        }
 
-// ===== KEYBOARD =====
-document.addEventListener('keydown', (e) => {
-    if (!started) return;
-    switch(e.key.toLowerCase()) {
-        case 'c': launchConfetti(); break;
-        case 'f': launchFireworks(); break;
-        case 'b': releaseBalloons(); break;
-        case 't': triggerTimeTravel(); break;
-        case 'm': toggleMusic(); break;
-    }
-});
-</script>
+        // ===== BALLOONS =====
+        const balloonDefs = [
+            { color: '#ff006e', light: '#ff5aa0' }, { color: '#ffd700', light: '#ffe866' },
+            { color: '#00bfff', light: '#66d9ff' }, { color: '#ff4500', light: '#ff7744' },
+            { color: '#9b5de5', light: '#bb88ff' }, { color: '#00f5d4', light: '#66ffea' },
+        ];
+        function createBalloon() {
+            const b = document.createElement('div'); b.className = 'balloon';
+            const def = balloonDefs[~~(Math.random() * balloonDefs.length)];
+            const size = 45 + Math.random() * 25;
+            const dur = 7 + Math.random() * 5;
+            b.style.cssText = `left:${Math.random() * 92}%;--size:${size}px;--color:${def.color};--color-light:${def.light};--rot:${(Math.random() - 0.5) * 30}deg;animation-duration:${dur}s;`;
+            b.innerHTML = `<div class="balloon-body"></div><div class="balloon-string"></div>`;
+            document.body.appendChild(b);
+            setTimeout(() => b.remove(), dur * 1000);
+        }
+        function releaseBalloons() {
+            playSFX('pop');
+            for (let i = 0; i < 15; i++) setTimeout(createBalloon, i * 150);
+        }
+
+        // ===== FIREWORKS =====
+        function createFirework(x, y) {
+            const colors = ['#ff006e', '#ffd700', '#00bfff', '#ff4500', '#00f5d4', '#9b5de5'];
+            const color = colors[~~(Math.random() * colors.length)];
+            const count = 25 + ~~(Math.random() * 15);
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2;
+                const dist = 60 + Math.random() * 80;
+                const p = document.createElement('div');
+                p.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:${color};z-index:155;pointer-events:none;box-shadow:0 0 6px ${color};`;
+                document.body.appendChild(p);
+                p.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist}px) scale(0.1)`, opacity: 0 }
+                ], { duration: 800 + Math.random() * 400, easing: 'cubic-bezier(0,.5,.5,1)', fill: 'forwards' });
+                setTimeout(() => p.remove(), 1500);
+            }
+        }
+        function launchFireworks() {
+            playSFX('boom');
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    createFirework(innerWidth * 0.15 + Math.random() * innerWidth * 0.7, innerHeight * 0.1 + Math.random() * innerHeight * 0.4);
+                    if (i > 0) playSFX('boom');
+                }, i * 350);
+            }
+        }
+
+        // ===== TIME TRAVEL EFFECT (with fullscreen flux capacitor) =====
+        let timeTravelActive = false;
+        function triggerTimeTravel() {
+            if (timeTravelActive) return;
+            timeTravelActive = true;
+
+            const flash = document.getElementById('timeFlash');
+            const lightning = document.getElementById('lightning');
+            const fluxOv = document.getElementById('fluxOverlay');
+
+            // Phase 1: Flux capacitor takes over the screen
+            playSFX('flux');
+            fluxOv.classList.add('active');
+
+            // Animate speed counter on flux overlay
+            const speedEl = document.getElementById('fluxSpeed');
+            let mph = 0;
+            const spdInterval = setInterval(() => {
+                mph += 3;
+                if (mph > 88) mph = 88;
+                speedEl.textContent = mph + ' MPH';
+                if (mph >= 88) {
+                    clearInterval(spdInterval);
+                    speedEl.style.color = '#ffd700';
+                    speedEl.style.textShadow = '0 0 20px #ffd700, 0 0 40px #ff8c00';
+                }
+            }, 40);
+
+            // Phase 2: At 88 mph - lightning + flash
+            setTimeout(() => {
+                playSFX('zap');
+                lightning.classList.add('flash');
+            }, 1200);
+
+            setTimeout(() => { lightning.classList.remove('flash'); }, 1600);
+
+            // Phase 3: Bright blue flash, flux overlay fades
+            setTimeout(() => {
+                flash.className = 'time-flash blue';
+                playSFX('whoosh');
+                fluxOv.classList.remove('active');
+            }, 1700);
+
+            setTimeout(() => {
+                flash.className = 'time-flash white';
+            }, 2000);
+
+            setTimeout(() => {
+                flash.className = 'time-flash';
+            }, 2300);
+
+            // Reset
+            setTimeout(() => {
+                speedEl.textContent = '88 MPH';
+                speedEl.style.color = '#ff4444';
+                speedEl.style.textShadow = '0 0 10px #ff4444';
+                timeTravelActive = false;
+            }, 3800);
+
+            randomizeTimeCircuits();
+        }
+
+        function randomizeTimeCircuits() {
+            const months = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];
+            function randDate() {
+                const m = months[~~(Math.random() * 12)];
+                const d = (~~(Math.random() * 28) + 1).toString().padStart(2, '0');
+                const y = (1950 + ~~(Math.random() * 100)).toString();
+                const h = (~~(Math.random() * 24)).toString().padStart(2, '0');
+                const min = (~~(Math.random() * 60)).toString().padStart(2, '0');
+                return `${m} ${d} ${y} ${h}:${min}`;
+            }
+            document.getElementById('destTime').textContent = randDate();
+            document.getElementById('departTime').textContent = randDate();
+        }
+
+        function updatePresentTime() {
+            const now = new Date();
+            const months = ['JAN', 'FEB', 'MÄR', 'APR', 'MAI', 'JUN', 'JUL', 'AUG', 'SEP', 'OKT', 'NOV', 'DEZ'];
+            const m = months[now.getMonth()];
+            const d = now.getDate().toString().padStart(2, '0');
+            const y = now.getFullYear();
+            const h = now.getHours().toString().padStart(2, '0');
+            const min = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('presentTime').textContent = `${m} ${d} ${y} ${h}:${min}`;
+        }
+
+        // ===== START SEQUENCE =====
+        let started = false;
+        function startSequence() {
+            if (started) return;
+            started = true;
+            if (!audioCtx) initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const btn = document.getElementById('startBtn');
+            const speedDisp = document.getElementById('speedDisplay');
+            btn.style.pointerEvents = 'none';
+
+            speedDisp.classList.add('visible');
+            let speed = 0;
+            const speedInterval = setInterval(() => {
+                speed += 2;
+                if (speed > 88) speed = 88;
+                speedDisp.querySelector('span').textContent = speed;
+                if (speed >= 88) clearInterval(speedInterval);
+            }, 40);
+
+            playSFX('whoosh');
+
+            setTimeout(() => {
+                playSFX('zap');
+                document.getElementById('lightning').classList.add('flash');
+                setTimeout(() => document.getElementById('lightning').classList.remove('flash'), 400);
+            }, 1600);
+
+            setTimeout(() => {
+                document.getElementById('timeFlash').className = 'time-flash white';
+            }, 1900);
+
+            setTimeout(() => {
+                document.getElementById('timeFlash').className = 'time-flash';
+                document.getElementById('startScreen').classList.add('hidden');
+
+                document.getElementById('mainContent').style.display = 'flex';
+                document.getElementById('timeCircuits').style.display = 'flex';
+                document.getElementById('musicBtn').style.display = 'flex';
+
+                // Set time circuits
+                document.getElementById('destTime').textContent = 'MÄR 29 2026 00:00';
+                document.getElementById('departTime').textContent = 'MÄR 31 1973 00:00';
+                updatePresentTime();
+                setInterval(updatePresentTime, 10000);
+
+                // Start music
+                startMusic();
+
+                // Animate elements in sequence
+                setTimeout(() => { document.getElementById('greeting').classList.add('visible'); }, 500);
+                setTimeout(() => {
+                    document.getElementById('speedometer').classList.add('visible');
+                    animateSpeedoCounter();
+                }, 1200);
+                setTimeout(() => { document.getElementById('messageCard').classList.add('visible'); }, 2000);
+                setTimeout(() => { document.getElementById('slideshowWrap').classList.add('visible'); }, 2800);
+                setTimeout(() => { document.getElementById('actions').classList.add('visible'); }, 3400);
+
+                setTimeout(launchConfetti, 1500);
+                enableShake();
+                showSwipeHint();
+            }, 2100);
+        }
+
+        function animateSpeedoCounter() {
+            const el = document.getElementById('speedoValue');
+            let val = 0;
+            const interval = setInterval(() => {
+                val += 1; el.textContent = val;
+                if (val >= 53) clearInterval(interval);
+            }, 30);
+        }
+
+        // ===== SLIDESHOW =====
+        (function () {
+            const imgs = document.querySelectorAll('#slideshow img');
+            const counter = document.getElementById('slideshowCounter');
+            const dotsContainer = document.getElementById('slideshowDots');
+            const total = imgs.length;
+            let current = 0;
+            let timer;
+
+            // Create dots
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'slideshow-dot' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => goTo(i));
+                dotsContainer.appendChild(dot);
+            }
+            const dots = dotsContainer.querySelectorAll('.slideshow-dot');
+
+            function goTo(index) {
+                imgs[current].classList.remove('active');
+                dots[current].classList.remove('active');
+                current = index;
+                imgs[current].classList.add('active');
+                dots[current].classList.add('active');
+                counter.textContent = (current + 1) + ' / ' + total;
+                resetTimer();
+            }
+
+            function next() { goTo((current + 1) % total); }
+
+            function resetTimer() {
+                clearInterval(timer);
+                timer = setInterval(next, 3500);
+            }
+
+            // Swipe support for slideshow
+            let sx = 0;
+            const el = document.getElementById('slideshow');
+            el.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+            el.addEventListener('touchend', (e) => {
+                const dx = e.changedTouches[0].clientX - sx;
+                if (Math.abs(dx) > 40) {
+                    dx < 0 ? goTo((current + 1) % total) : goTo((current - 1 + total) % total);
+                }
+            }, { passive: true });
+
+            resetTimer();
+        })();
+
+        // ===== SPARKLE =====
+        function createSparkle(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const spark = document.createElement('div');
+                const angle = (i / 8) * Math.PI * 2;
+                const dist = 30 + Math.random() * 20;
+                spark.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:4px;height:4px;border-radius:50%;background:#ffd700;z-index:200;pointer-events:none;box-shadow:0 0 8px #ffd700;`;
+                document.body.appendChild(spark);
+                spark.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle) * dist}px,${Math.sin(angle) * dist}px) scale(0)`, opacity: 0 }
+                ], { duration: 500, fill: 'forwards' });
+                setTimeout(() => spark.remove(), 600);
+            }
+        }
+
+        function isInteractive(el) {
+            return el.closest('.start-screen') || el.closest('button') || el.closest('.music-control');
+        }
+
+        document.addEventListener('click', (e) => { if (!isInteractive(e.target)) createSparkle(e.clientX, e.clientY); });
+
+        let touchMoved = false;
+        document.addEventListener('touchstart', () => { touchMoved = false; }, { passive: true });
+        document.addEventListener('touchmove', () => { touchMoved = true; }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            if (touchMoved || !started || isInteractive(e.target)) return;
+            const t = e.changedTouches[0];
+            if (t) createSparkle(t.clientX, t.clientY);
+        }, { passive: true });
+
+        // ===== SWIPE GESTURES =====
+        let swipeStartX = 0, swipeStartY = 0, swipeStartTime = 0;
+        document.addEventListener('touchstart', (e) => {
+            if (!started) return;
+            const t = e.touches[0];
+            swipeStartX = t.clientX; swipeStartY = t.clientY; swipeStartTime = Date.now();
+        }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+            if (!started || isInteractive(e.target)) return;
+            const t = e.changedTouches[0]; if (!t) return;
+            const dx = t.clientX - swipeStartX, dy = t.clientY - swipeStartY;
+            if (Date.now() - swipeStartTime > 400) return;
+            const ax = Math.abs(dx), ay = Math.abs(dy);
+            if (ax < 50 && ay < 50) return;
+            if (ay > ax) { dy < 0 ? launchConfetti() : releaseBalloons(); }
+            else { dx < 0 ? triggerTimeTravel() : launchFireworks(); }
+        }, { passive: true });
+
+        // ===== SHAKE =====
+        let lastShakeTime = 0, lastAccel = { x: 0, y: 0, z: 0 };
+        function handleMotion(e) {
+            if (!started) return;
+            const a = e.accelerationIncludingGravity; if (!a || a.x == null) return;
+            const d = Math.abs(a.x - lastAccel.x) + Math.abs(a.y - lastAccel.y) + Math.abs(a.z - lastAccel.z);
+            lastAccel = { x: a.x, y: a.y, z: a.z };
+            if (d > 20 && Date.now() - lastShakeTime > 1500) {
+                lastShakeTime = Date.now();
+                launchConfetti();
+                setTimeout(launchFireworks, 300);
+                setTimeout(releaseBalloons, 600);
+            }
+        }
+        function enableShake() {
+            if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                DeviceMotionEvent.requestPermission().then(r => {
+                    if (r === 'granted') window.addEventListener('devicemotion', handleMotion, { passive: true });
+                }).catch(() => { });
+            } else if (typeof DeviceMotionEvent !== 'undefined') {
+                window.addEventListener('devicemotion', handleMotion, { passive: true });
+            }
+        }
+
+        function showSwipeHint() {
+            const h = document.getElementById('swipeHint'); if (!h) return;
+            setTimeout(() => h.classList.add('visible'), 4500);
+            setTimeout(() => h.classList.remove('visible'), 12000);
+        }
+
+        // ===== KEYBOARD =====
+        document.addEventListener('keydown', (e) => {
+            if (!started) return;
+            switch (e.key.toLowerCase()) {
+                case 'c': launchConfetti(); break;
+                case 'f': launchFireworks(); break;
+                case 'b': releaseBalloons(); break;
+                case 't': triggerTimeTravel(); break;
+                case 'm': toggleMusic(); break;
+            }
+        });
+    </script>
 </body>
+
 </html>
