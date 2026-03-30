@@ -46,7 +46,7 @@
         /* START SCREEN */
         .start-screen {
             position: fixed; inset: 0; z-index: 200;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: radial-gradient(ellipse at center, #0a0a2e 0%, #000 70%);
             transition: opacity 1.2s ease, visibility 1.2s ease;
         }
@@ -188,7 +188,7 @@
         /* TIME DISPLAY */
         .time-circuits {
             position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-            z-index: 80; display: flex; flex-direction: column; gap: 4px;
+            z-index: 80; display: none; flex-direction: column; gap: 4px;
             background: rgba(0,0,0,0.9); border: 1px solid #333; border-radius: 8px;
             padding: 8px 12px; font-family: 'Orbitron', sans-serif;
             box-shadow: 0 0 20px rgba(0,0,0,0.8); max-width: 95vw;
@@ -209,13 +209,15 @@
 
         /* MAIN CONTENT */
         .content {
-            position: relative; z-index: 10; display: flex;
+            position: relative; z-index: 10; display: none;
             flex-direction: column; align-items: center; justify-content: center;
             min-height: 100vh; padding: 90px 16px 80px; text-align: center;
         }
         .greeting {
-            opacity: 1; transform: none;
+            opacity: 0; transform: translateY(30px);
+            transition: all 1s ease;
         }
+        .greeting.visible { opacity: 1; transform: translateY(0); }
         .greeting .subtitle {
             font-family: 'Orbitron', sans-serif; font-size: clamp(0.7rem, 2vw, 1rem);
             color: #00bfff; letter-spacing: 8px; text-transform: uppercase;
@@ -240,8 +242,10 @@
         /* SPEEDOMETER */
         .speedometer {
             position: relative; width: 180px; height: 180px; margin: 15px auto;
-            opacity: 1; transform: scale(1);
+            opacity: 0; transform: scale(0);
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
+        .speedometer.visible { opacity: 1; transform: scale(1); }
         .speedo-ring {
             position: absolute; inset: 0; border: 3px solid #333; border-radius: 50%;
             background: radial-gradient(circle, #111 60%, #000 100%);
@@ -274,8 +278,9 @@
             background: rgba(0,191,255,0.03); backdrop-filter: blur(10px);
             border-radius: 12px; border: 1px solid rgba(0,191,255,0.2);
             box-shadow: 0 0 30px rgba(0,191,255,0.1), inset 0 0 30px rgba(0,0,0,0.3);
-            opacity: 1; transform: none;
+            opacity: 0; transform: translateY(30px); transition: all 1s ease;
         }
+        .message.visible { opacity: 1; transform: translateY(0); }
         .message p { color: #ccc; font-size: 1rem; line-height: 1.8; font-weight: 300; }
         .message .highlight { color: #ffd700; font-weight: 600; }
         .message .blue { color: #00bfff; font-weight: 600; }
@@ -293,6 +298,10 @@
             transition: opacity 1s ease-in-out;
         }
         .slideshow img.active { opacity: 1; }
+        .slideshow-wrap {
+            opacity: 0; transform: translateY(30px); transition: all 1s ease;
+        }
+        .slideshow-wrap.visible { opacity: 1; transform: translateY(0); }
         .slideshow-counter {
             position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
             font-family: 'Orbitron', sans-serif; font-size: 0.5rem;
@@ -314,8 +323,9 @@
         /* BUTTONS */
         .actions {
             display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-            margin: 20px 0; opacity: 1;
+            margin: 20px 0; opacity: 0; transition: opacity 1s ease;
         }
+        .actions.visible { opacity: 1; }
         .action-btn {
             padding: 12px 28px; font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
             font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
@@ -367,7 +377,7 @@
             position: fixed; bottom: 20px; left: 20px; z-index: 160;
             background: rgba(0,0,0,0.7); border: 1px solid #00bfff;
             border-radius: 50%; width: 54px; height: 54px;
-            display: flex; align-items: center; justify-content: center;
+            display: none; align-items: center; justify-content: center;
             cursor: pointer; font-size: 1.3rem; transition: all 0.3s ease;
             box-shadow: 0 0 10px rgba(0,191,255,0.3);
             -webkit-tap-highlight-color: transparent; touch-action: manipulation;
@@ -515,6 +525,14 @@
 <!-- Confetti -->
 <canvas id="confetti-canvas"></canvas>
 
+<!-- Start Screen -->
+<div class="start-screen" id="startScreen">
+    <div class="bttf-logo">Zurück in die<br>Zukunft</div>
+    <div class="bttf-sub">Berni Edition</div>
+    <div class="speed-display" id="speedDisplay">Zielgeschwindigkeit: <span>88</span> MPH</div>
+    <button class="start-btn" id="startBtn" onclick="startSequence()">Zeitreise starten</button>
+</div>
+
 <!-- Main Content -->
 <div class="content" id="mainContent">
     <div class="greeting" id="greeting">
@@ -544,28 +562,30 @@
             Dein Pascal
         </p>
     </div>
-    <div class="slideshow" id="slideshow">
-        <img src="Bilder/5be76b26-064e-4c14-a8e0-4b8f70360ce9.JPG" class="active" alt="Berni">
-        <img src="Bilder/073fe171-9f34-4445-97ff-9618aaa32bf4.JPG" alt="Berni">
-        <img src="Bilder/e69a580c-740c-4d6a-bf54-875fec0aa1ae.JPG" alt="Berni">
-        <img src="Bilder/b5440b9b-df90-47be-86de-05ea3e8b804e.JPG" alt="Berni">
-        <img src="Bilder/aa937178-6260-4960-a8a9-c8af202655e9.JPG" alt="Berni">
-        <img src="Bilder/05c86bfe-ef27-49fd-9747-fb642bcbce21.JPG" alt="Berni">
-        <img src="Bilder/d1905966-5817-4866-b1ac-de71d173bcc0.JPG" alt="Berni">
-        <img src="Bilder/5b801114-116b-445c-8ebd-4e608dbdbffa.JPG" alt="Berni">
-        <img src="Bilder/8c890b22-a668-4c5a-9234-f89a65ca2bb5.JPG" alt="Berni">
-        <img src="Bilder/4c19bc67-2923-4ae3-908c-1cde9f59a8d0.JPG" alt="Berni">
-        <img src="Bilder/b66d1a86-ddf0-491c-8c3b-bd3666b42987.JPG" alt="Berni">
-        <img src="Bilder/413558f7-8d7c-4e09-a23a-b84f04d9168b.JPG" alt="Berni">
-        <img src="Bilder/b23f000b-7cb7-47d3-bdd3-902f18901204.JPG" alt="Berni">
-        <img src="Bilder/6a339906-36e0-4070-b9bc-8a6d5217dde4.JPG" alt="Berni">
-        <img src="Bilder/c707f479-82b2-4619-9e2c-b4de1d9cb9ca.JPG" alt="Berni">
-        <img src="Bilder/f5080668-ef41-4ad4-bd95-10ba7c69a1a6.JPG" alt="Berni">
-        <img src="Bilder/99a61460-8d66-4990-855b-ff0fa1e2b830.JPG" alt="Berni">
-        <img src="Bilder/a6fe1aaa-c212-4130-a196-e2be4082a5a7.JPG" alt="Berni">
-        <span class="slideshow-counter" id="slideshowCounter">1 / 18</span>
+    <div class="slideshow-wrap" id="slideshowWrap">
+        <div class="slideshow" id="slideshow">
+            <img src="Bilder/5be76b26-064e-4c14-a8e0-4b8f70360ce9.JPG" class="active" alt="Berni">
+            <img src="Bilder/073fe171-9f34-4445-97ff-9618aaa32bf4.JPG" alt="Berni">
+            <img src="Bilder/e69a580c-740c-4d6a-bf54-875fec0aa1ae.JPG" alt="Berni">
+            <img src="Bilder/b5440b9b-df90-47be-86de-05ea3e8b804e.JPG" alt="Berni">
+            <img src="Bilder/aa937178-6260-4960-a8a9-c8af202655e9.JPG" alt="Berni">
+            <img src="Bilder/05c86bfe-ef27-49fd-9747-fb642bcbce21.JPG" alt="Berni">
+            <img src="Bilder/d1905966-5817-4866-b1ac-de71d173bcc0.JPG" alt="Berni">
+            <img src="Bilder/5b801114-116b-445c-8ebd-4e608dbdbffa.JPG" alt="Berni">
+            <img src="Bilder/8c890b22-a668-4c5a-9234-f89a65ca2bb5.JPG" alt="Berni">
+            <img src="Bilder/4c19bc67-2923-4ae3-908c-1cde9f59a8d0.JPG" alt="Berni">
+            <img src="Bilder/b66d1a86-ddf0-491c-8c3b-bd3666b42987.JPG" alt="Berni">
+            <img src="Bilder/413558f7-8d7c-4e09-a23a-b84f04d9168b.JPG" alt="Berni">
+            <img src="Bilder/b23f000b-7cb7-47d3-bdd3-902f18901204.JPG" alt="Berni">
+            <img src="Bilder/6a339906-36e0-4070-b9bc-8a6d5217dde4.JPG" alt="Berni">
+            <img src="Bilder/c707f479-82b2-4619-9e2c-b4de1d9cb9ca.JPG" alt="Berni">
+            <img src="Bilder/f5080668-ef41-4ad4-bd95-10ba7c69a1a6.JPG" alt="Berni">
+            <img src="Bilder/99a61460-8d66-4990-855b-ff0fa1e2b830.JPG" alt="Berni">
+            <img src="Bilder/a6fe1aaa-c212-4130-a196-e2be4082a5a7.JPG" alt="Berni">
+            <span class="slideshow-counter" id="slideshowCounter">1 / 18</span>
+        </div>
+        <div class="slideshow-dots" id="slideshowDots"></div>
     </div>
-    <div class="slideshow-dots" id="slideshowDots"></div>
     <div class="actions" id="actions">
         <button class="action-btn gold-btn" onclick="launchConfetti()">🎉 Konfetti</button>
         <button class="action-btn blue-btn" onclick="triggerTimeTravel()">⚡ Zeitreise</button>
@@ -948,34 +968,71 @@ function updatePresentTime() {
     document.getElementById('presentTime').textContent = `${m} ${d} ${y} ${h}:${min}`;
 }
 
-// ===== AUTO INIT =====
-let started = true;
-(function autoInit() {
-    // Set time circuits
-    document.getElementById('destTime').textContent = 'MÄR 29 2026 00:00';
-    document.getElementById('departTime').textContent = 'MÄR 31 1973 00:00';
-    updatePresentTime();
-    setInterval(updatePresentTime, 10000);
+// ===== START SEQUENCE =====
+let started = false;
+function startSequence() {
+    if (started) return;
+    started = true;
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    animateSpeedoCounter();
-    enableShake();
-    showSwipeHint();
+    const btn = document.getElementById('startBtn');
+    const speedDisp = document.getElementById('speedDisplay');
+    btn.style.pointerEvents = 'none';
 
-    // Try autoplay music, fallback to first touch/click
-    bgMusic.play().catch(() => {
-        function startOnInteraction() {
-            bgMusic.play().catch(() => {});
-            musicPlaying = true;
-            document.getElementById('musicBtn').classList.add('playing');
-            document.removeEventListener('click', startOnInteraction);
-            document.removeEventListener('touchstart', startOnInteraction);
-        }
-        document.addEventListener('click', startOnInteraction, { once: false });
-        document.addEventListener('touchstart', startOnInteraction, { once: false });
-    });
-    musicPlaying = true;
-    document.getElementById('musicBtn').classList.add('playing');
-})();
+    speedDisp.classList.add('visible');
+    let speed = 0;
+    const speedInterval = setInterval(() => {
+        speed += 2;
+        if (speed > 88) speed = 88;
+        speedDisp.querySelector('span').textContent = speed;
+        if (speed >= 88) clearInterval(speedInterval);
+    }, 40);
+
+    playSFX('whoosh');
+
+    setTimeout(() => {
+        playSFX('zap');
+        document.getElementById('lightning').classList.add('flash');
+        setTimeout(() => document.getElementById('lightning').classList.remove('flash'), 400);
+    }, 1600);
+
+    setTimeout(() => {
+        document.getElementById('timeFlash').className = 'time-flash white';
+    }, 1900);
+
+    setTimeout(() => {
+        document.getElementById('timeFlash').className = 'time-flash';
+        document.getElementById('startScreen').classList.add('hidden');
+
+        document.getElementById('mainContent').style.display = 'flex';
+        document.getElementById('timeCircuits').style.display = 'flex';
+        document.getElementById('musicBtn').style.display = 'flex';
+
+        // Set time circuits
+        document.getElementById('destTime').textContent = 'MÄR 29 2026 00:00';
+        document.getElementById('departTime').textContent = 'MÄR 31 1973 00:00';
+        updatePresentTime();
+        setInterval(updatePresentTime, 10000);
+
+        // Start music
+        startMusic();
+
+        // Animate elements in sequence
+        setTimeout(() => { document.getElementById('greeting').classList.add('visible'); }, 500);
+        setTimeout(() => {
+            document.getElementById('speedometer').classList.add('visible');
+            animateSpeedoCounter();
+        }, 1200);
+        setTimeout(() => { document.getElementById('messageCard').classList.add('visible'); }, 2000);
+        setTimeout(() => { document.getElementById('slideshowWrap').classList.add('visible'); }, 2800);
+        setTimeout(() => { document.getElementById('actions').classList.add('visible'); }, 3400);
+
+        setTimeout(launchConfetti, 1500);
+        enableShake();
+        showSwipeHint();
+    }, 2100);
+}
 
 function animateSpeedoCounter() {
     const el = document.getElementById('speedoValue');
